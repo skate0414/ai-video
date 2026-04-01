@@ -17,6 +17,36 @@ const STEALTH_ARGS = [
   '--no-default-browser-check',
 ];
 
+/** Small helper to wait for Chrome to release a profile directory lock. */
+const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Launch a persistent browser context with retry.
+ *
+ * Playwright's `launchPersistentContext` fails when the Chrome profile
+ * directory is still locked by a recently-closed browser process.  This
+ * wrapper retries up to 3 times with a short back-off to handle the race.
+ */
+async function launchWithRetry(profileDir: string, stealthArgs: string[], retries = 3): Promise<BrowserContext> {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await chromium.launchPersistentContext(profileDir, {
+        channel: 'chrome',
+        headless: false,
+        viewport: { width: 1440, height: 900 },
+        args: stealthArgs,
+        ignoreDefaultArgs: ['--enable-automation'],
+      });
+    } catch (err) {
+      if (attempt >= retries) throw err;
+      console.warn(`[Workbench] launchPersistentContext attempt ${attempt} failed, retrying...`, err instanceof Error ? err.message : err);
+      await delay(1000 * attempt);
+    }
+  }
+  // Unreachable, but satisfies TypeScript
+  throw new Error('launchPersistentContext failed after retries');
+}
+
 /**
  * The core automation engine.
  *
@@ -373,13 +403,7 @@ export class Workbench {
 
     if (!ctx) {
       // Open a temporary browser session
-      ctx = await chromium.launchPersistentContext(account.profileDir, {
-        channel: 'chrome',
-        headless: false,
-        viewport: { width: 1440, height: 900 },
-        args: STEALTH_ARGS,
-        ignoreDefaultArgs: ['--enable-automation'],
-      });
+      ctx = await launchWithRetry(account.profileDir, STEALTH_ARGS);
       needClose = true;
     }
 
@@ -462,14 +486,14 @@ export class Workbench {
     const account = this.accounts.get(accountId);
     if (!account) throw new Error(`Account ${accountId} not found`);
 
+    // Release profile lock: close the active browser if it uses the same profile
+    if (this.activeAccountId === accountId) {
+      await this.closeBrowser();
+      await delay(500);
+    }
+
     const selectors = this.getSelectors(account.provider);
-    const context = await chromium.launchPersistentContext(account.profileDir, {
-      channel: 'chrome',
-      headless: false,
-      viewport: { width: 1440, height: 900 },
-      args: STEALTH_ARGS,
-      ignoreDefaultArgs: ['--enable-automation'],
-    });
+    const context = await launchWithRetry(account.profileDir, STEALTH_ARGS);
 
     const page = context.pages()[0] ?? (await context.newPage());
     await page.goto(selectors.chatUrl, { waitUntil: 'domcontentloaded' });
@@ -505,6 +529,8 @@ export class Workbench {
     if (!ctx) return;
     this.loginSessions.delete(accountId);
     await ctx.close().catch((e: unknown) => console.warn('[Workbench] Failed to close login browser context:', e));
+    // Give Chrome time to fully release the profile directory lock
+    await delay(500);
     this.emit({ type: 'login_browser_closed', payload: { accountId } });
     this.emitState();
   }
@@ -527,14 +553,13 @@ export class Workbench {
     // Close previous context if switching accounts
     await this.closeBrowser();
 
+    // Release profile lock: close login session if this account has one open
+    if (this.loginSessions.has(account.id)) {
+      await this.closeLoginBrowser(account.id);
+    }
+
     const selectors = this.getSelectors(account.provider);
-    const context = await chromium.launchPersistentContext(account.profileDir, {
-      channel: 'chrome',
-      headless: false,
-      viewport: { width: 1440, height: 900 },
-      args: STEALTH_ARGS,
-      ignoreDefaultArgs: ['--enable-automation'],
-    });
+    const context = await launchWithRetry(account.profileDir, STEALTH_ARGS);
 
     const page = await openChat(context, selectors);
     this.activeContext = context;
