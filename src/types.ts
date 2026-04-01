@@ -1,39 +1,25 @@
 /* ------------------------------------------------------------------ */
-/*  AI Chat Automation Workbench – shared type definitions             */
+/*  AI Chat Automation Workbench – type definitions                    */
 /* ------------------------------------------------------------------ */
+
+/* ---- Re-export shared types (single source of truth: shared/types.ts) ---- */
+
+export type {
+  ProviderId,
+  ChatMode,
+  ProviderInfo,
+  Account,
+  ModelOption,
+  TaskItem,
+  WorkbenchState,
+} from '../shared/types.js';
+
+import type { ProviderId, ModelOption, WorkbenchState } from '../shared/types.js';
+
+/* ---- Backend-only types ---- */
 
 /** Built-in provider identifiers. */
 export type BuiltinProviderId = 'chatgpt' | 'gemini' | 'deepseek' | 'kimi';
-
-/**
- * Provider identifier — built-in providers plus any user-added custom providers.
- * Custom providers use whatever `id` the user sets (e.g. 'claude', 'grok').
- */
-export type ProviderId = string;
-
-/** Chat mode – new chat per question or continue in same chat. */
-export type ChatMode = 'new' | 'continue';
-
-/** One login credential for a chat provider. */
-export interface Account {
-  id: string;
-  provider: ProviderId;
-  label: string;
-  /** Browser user-data directory (persistent cookies / session). */
-  profileDir: string;
-  /** Whether the account is currently known to have exhausted its quota. */
-  quotaExhausted: boolean;
-  /** ISO timestamp of last known quota reset, if any. */
-  quotaResetAt?: string;
-}
-
-/** A model/mode option available for a provider. */
-export interface ModelOption {
-  id: string;
-  label: string;
-  /** Sequence of selectors to click to activate this model. Empty/omitted = default (no action needed). */
-  selectSteps?: string[];
-}
 
 /** CSS / aria selectors that describe how to interact with a provider page. */
 export interface ProviderSelectors {
@@ -55,50 +41,6 @@ export interface ProviderSelectors {
   modelOptionSelector?: string;
   /** Selector for the "+" / attachment button next to the chat input. */
   fileUploadTrigger?: string;
-}
-
-/** A single question to be sent to the AI chat. */
-export interface TaskItem {
-  id: string;
-  question: string;
-  /** Which provider to prefer (optional – falls back to any available). */
-  preferredProvider?: ProviderId;
-  /** Which model/mode to use (optional – falls back to provider default). */
-  preferredModel?: string;
-  /** Absolute file paths on the server to upload with the question. */
-  attachments?: string[];
-  status: 'pending' | 'running' | 'done' | 'failed';
-  answer?: string;
-  error?: string;
-  /** ISO timestamp when processing started. */
-  startedAt?: string;
-  /** ISO timestamp when processing completed. */
-  completedAt?: string;
-  /** Which account was used. */
-  accountId?: string;
-}
-
-/** Summary info for a provider, exposed to the UI. */
-export interface ProviderInfo {
-  id: ProviderId;
-  label: string;
-  builtin: boolean;
-}
-
-/** Overall workbench state exposed to the UI. */
-export interface WorkbenchState {
-  accounts: Account[];
-  tasks: TaskItem[];
-  isRunning: boolean;
-  chatMode: ChatMode;
-  /** All available providers (built-in + custom). */
-  providers: ProviderInfo[];
-  /** Dynamically detected models per provider. */
-  detectedModels: Partial<Record<ProviderId, ModelOption[]>>;
-  currentTaskId?: string;
-  activeAccountId?: string;
-  /** Account IDs that currently have a login browser open. */
-  loginOpenAccountIds: string[];
 }
 
 /** Events pushed to the UI via SSE. */

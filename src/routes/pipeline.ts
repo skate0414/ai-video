@@ -1,10 +1,10 @@
-import { existsSync, createReadStream, statSync, readdirSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { existsSync, createReadStream, statSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { PipelineOrchestrator, type PipelineConfig } from '../pipeline/orchestrator.js';
 import type { PipelineEvent, QualityTier, PipelineStage, ModelOverrides } from '../pipeline/types.js';
 import type { ChatAdapter } from '../adapters/chatAdapter.js';
 import { GeminiAdapter } from '../adapters/geminiAdapter.js';
-import { json, parseJsonBody, readBody, type Route } from './helpers.js';
+import { json, parseJsonBody, type Route } from './helpers.js';
 import type { ConfigStore, TTSSettings } from '../configStore.js';
 import type { VideoProviderConfig } from '../adapters/videoProvider.js';
 import { isEdgeTTSAvailable, listVoices } from '../adapters/ttsProvider.js';

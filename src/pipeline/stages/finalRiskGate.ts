@@ -25,6 +25,7 @@ export interface FinalRiskGateOutput {
   };
 }
 
+// Final risk gate is a sub-step of the REFINEMENT stage (safety check before pipeline completion)
 const log = createStageLog('REFINEMENT');
 
 /**

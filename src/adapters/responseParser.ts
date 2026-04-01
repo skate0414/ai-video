@@ -103,10 +103,4 @@ export function mergeContinuation(original: string, continuation: string): strin
   return original + continuation;
 }
 
-/**
- * Validate a parsed object against an expected set of required keys.
- * Returns a list of missing keys.
- */
-export function validateKeys(obj: Record<string, any>, requiredKeys: string[]): string[] {
-  return requiredKeys.filter(k => !(k in obj));
-}
+

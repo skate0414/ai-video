@@ -391,7 +391,9 @@ export class Workbench {
       await page.goto(selectors.chatUrl, { waitUntil: 'domcontentloaded', timeout: 30_000 });
 
       // Wait for the page to be fully ready
-      await page.waitForSelector(selectors.readyIndicator, { timeout: 15_000 }).catch(() => {});
+      await page.waitForSelector(selectors.readyIndicator, { timeout: 15_000 }).catch((e: unknown) => {
+        console.warn('[Workbench] Ready indicator not found during model detection:', e instanceof Error ? e.message : e);
+      });
 
       // Give the page extra time to hydrate JS frameworks and render UI
       await page.waitForTimeout(3_000);
@@ -422,7 +424,7 @@ export class Workbench {
       return this.getModels(provider); // fall back to defaults
     } finally {
       if (needClose) {
-        await ctx.close().catch(() => {});
+        await ctx.close().catch((e: unknown) => console.warn('[Workbench] Failed to close browser context:', e));
       }
     }
   }
@@ -485,10 +487,14 @@ export class Workbench {
 
     // Auto-detect models in the background after the page has loaded
     page.waitForSelector(selectors.readyIndicator, { timeout: 15_000 })
-      .catch(() => {})
+      .catch((e: unknown) => {
+        console.warn('[Workbench] Ready indicator not found during login:', e instanceof Error ? e.message : e);
+      })
       .then(() => page.waitForTimeout(3_000))
       .then(() => this.autoDetectModels(page, account.provider))
-      .catch(() => {}); // fire-and-forget
+      .catch((e: unknown) => {
+        console.warn('[Workbench] Auto-detect models failed during login:', e instanceof Error ? e.message : e);
+      }); // fire-and-forget
   }
 
   /**
@@ -498,7 +504,7 @@ export class Workbench {
     const ctx = this.loginSessions.get(accountId);
     if (!ctx) return;
     this.loginSessions.delete(accountId);
-    await ctx.close().catch(() => {});
+    await ctx.close().catch((e: unknown) => console.warn('[Workbench] Failed to close login browser context:', e));
     this.emit({ type: 'login_browser_closed', payload: { accountId } });
     this.emitState();
   }
@@ -537,7 +543,9 @@ export class Workbench {
 
     // Auto-detect models in the background if not yet detected for this provider
     if (!this.detectedModels[account.provider]?.length) {
-      this.autoDetectModels(page, account.provider).catch(() => {});
+      this.autoDetectModels(page, account.provider).catch((e: unknown) => {
+        console.warn('[Workbench] Auto-detect models failed:', e instanceof Error ? e.message : e);
+      });
     }
 
     return page;
@@ -545,7 +553,7 @@ export class Workbench {
 
   private async closeBrowser(): Promise<void> {
     if (this.activeContext) {
-      await this.activeContext.close().catch(() => {});
+      await this.activeContext.close().catch((e: unknown) => console.warn('[Workbench] Failed to close active context:', e));
       this.activeContext = null;
       this.activePage = null;
       this.activeAccountId = null;
@@ -726,7 +734,7 @@ export class Workbench {
 
     // If the workbench isn't running, start the processing loop
     if (!this.running) {
-      this.start().catch(() => {});
+      this.start().catch((e: unknown) => console.warn('[Workbench] Failed to start processing loop:', e));
     }
 
     try {

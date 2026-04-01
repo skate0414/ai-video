@@ -13,6 +13,7 @@ export interface CalibrationInput {
   researchData: ResearchData;
 }
 
+// Calibration is a sub-step of the NARRATIVE_MAP stage (runs before narrative mapping)
 const log = createStageLog('NARRATIVE_MAP');
 
 /**

@@ -24,6 +24,11 @@
   - [视频下载](#视频下载)
 - [资源管理接口](#资源管理接口)
 - [配置接口](#配置接口)
+  - [环境诊断](#get-apiconfigenvironment)
+  - [TTS 配置](#get-apiconfigtts)
+  - [视频提供者配置](#get-apiconfigvideo-provider)
+  - [数据目录](#get-apidata-dir)
+  - [项目导入/导出](#项目导入导出)
 - [首次运行接口](#首次运行接口)
 - [SSE 事件类型](#sse-事件类型)
 - [错误格式](#错误格式)
@@ -459,7 +464,7 @@ KEYFRAME_GEN | VIDEO_GEN | TTS | ASSEMBLY | REFINEMENT
 
 #### `POST /api/pipeline/:id/resume`
 
-恢复在暂停点（QA_REVIEW / REFERENCE_IMAGE）暂停的流水线。
+恢复在暂停点（QA_REVIEW / STORYBOARD / REFERENCE_IMAGE）暂停的流水线。
 
 ---
 
@@ -754,6 +759,140 @@ KEYFRAME_GEN | VIDEO_GEN | TTS | ASSEMBLY | REFINEMENT
   "qualityTier": "premium"
 }
 ```
+
+---
+
+#### `GET /api/config/environment`
+
+获取环境诊断信息（检测 FFmpeg、edge-tts、Playwright 等依赖是否可用）。
+
+**响应** `200`：
+```json
+{
+  "ffmpegAvailable": true,
+  "edgeTtsAvailable": true,
+  "playwrightAvailable": true,
+  "nodeVersion": "v20.11.0",
+  "platform": "linux",
+  "dataDir": "/home/user/.local/share/ai-video-pipeline"
+}
+```
+
+---
+
+#### `GET /api/config/tts`
+
+获取当前 TTS 语音合成配置。
+
+**响应** `200`：
+```json
+{
+  "voice": "zh-CN-XiaoxiaoNeural",
+  "rate": "+0%",
+  "pitch": "+0Hz"
+}
+```
+
+---
+
+#### `POST /api/config/tts`
+
+更新 TTS 语音合成配置。
+
+**请求体**：
+```json
+{
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+10%",
+  "pitch": "-5Hz"
+}
+```
+
+**响应** `200`：`{ "ok": true, "ttsConfig": { ... } }`
+
+---
+
+#### `GET /api/config/tts/voices`
+
+获取可用的 TTS 语音列表。
+
+**查询参数**：
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `locale` | `string` | 按语言区域过滤（如 `zh-CN`） |
+
+**响应** `200`：
+```json
+{
+  "voices": [
+    { "Name": "zh-CN-XiaoxiaoNeural", "Gender": "Female", "Locale": "zh-CN" }
+  ]
+}
+```
+
+---
+
+#### `GET /api/config/video-provider`
+
+获取当前浏览器端视频生成提供者配置。
+
+**响应** `200`：视频提供者配置对象或 `null`
+
+---
+
+#### `POST /api/config/video-provider`
+
+设置浏览器端视频生成提供者配置（如 Seedance）。
+
+**请求体**：
+```json
+{
+  "url": "https://seedance.ai",
+  "promptInput": "textarea",
+  "generateButton": "button.generate",
+  "videoResult": "video",
+  "profileDir": "/path/to/profile"
+}
+```
+
+**响应** `200`：`{ "ok": true, "videoProviderConfig": { ... } }`
+
+---
+
+#### `GET /api/data-dir`
+
+获取当前数据存储目录路径。
+
+**响应** `200`：
+```json
+{
+  "dataDir": "/home/user/.local/share/ai-video-pipeline"
+}
+```
+
+---
+
+### 项目导入/导出
+
+#### `GET /api/pipeline/:id/export`
+
+导出项目为 JSON 包（包含项目数据和所有阶段产物）。
+
+- **Content-Type**: `application/json`
+- **Content-Disposition**: `attachment; filename="proj_xxx.json"`
+
+**响应** `200`：JSON 包含项目数据、所有阶段产物、导出时间和版本号
+
+---
+
+#### `POST /api/pipeline/import`
+
+导入项目 JSON 包。
+
+**请求体**：导出的 JSON 包
+
+**响应** `201`：导入后的项目对象（会分配新的项目 ID）
 
 ---
 

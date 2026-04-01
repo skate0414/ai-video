@@ -25,6 +25,7 @@ export interface SubjectIsolationOutput {
   failedCount: number;
 }
 
+// Subject isolation is a sub-step of the STORYBOARD stage (validates visual prompts before image gen)
 const log = createStageLog('STORYBOARD');
 
 const SUBJECT_ISOLATION_PROMPT = `You are a visual prompt QA specialist. Your job is to check whether each scene's visual prompt has a CLEAR, IDENTIFIABLE primary subject that an AI image generator can render.

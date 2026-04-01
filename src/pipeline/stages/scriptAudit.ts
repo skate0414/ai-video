@@ -28,6 +28,7 @@ export interface ScriptAuditOutput {
   passed: boolean;
 }
 
+// Script audit is a sub-step of the SCRIPT_GENERATION stage (self-correction pass after generation)
 const log = createStageLog('SCRIPT_GENERATION');
 
 const SCRIPT_AUDIT_PROMPT = `You are a senior script editor performing a self-correction audit on a science explainer video script.

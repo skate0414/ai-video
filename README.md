@@ -37,8 +37,8 @@ ai-video/
 │   ├── types.ts                  # 后端公共类型
 │   ├── routes/
 │   │   ├── helpers.ts            # 安全工具：readBody 大小限制、JSON 解析、上传白名单
-│   │   ├── pipeline.ts           # 流水线 CRUD + 控制 API（~25 个端点）
-│   │   ├── workbench.ts          # 工作台 API（账号/任务/提供者管理，22 个端点）
+│   │   ├── pipeline.ts           # 流水线 CRUD + 控制 + 配置 API（~33 个端点）
+│   │   ├── workbench.ts          # 工作台 API（账号/任务/提供者管理，19 个端点）
 │   │   ├── setup.ts              # 首次运行检测（FFmpeg / Playwright / API Key）
 │   │   └── __tests__/            # 路由单元测试
 │   ├── pipeline/                 # 13 步流水线引擎
@@ -51,21 +51,25 @@ ai-video/
 │   │   ├── prompts.ts            # 各阶段 AI Prompt 模板
 │   │   ├── types.ts              # 流水线类型定义
 │   │   ├── __tests__/            # 流水线单元测试（7 个测试文件）
-│   │   └── stages/               # 13 个阶段实现（每阶段独立模块）
+│   │   └── stages/               # 13 个阶段实现 + 4 个质量子步骤（每阶段独立模块）
 │   │       ├── stageLog.ts              # 共享日志工厂（createStageLog）
 │   │       ├── capabilityAssessment.ts  # 1. 能力评估（安全检查）
+│   │       ├── cvPreprocess.ts          #    └─ CV 预处理子步骤
 │   │       ├── styleExtraction.ts       # 2. 风格提取（Style DNA）
 │   │       ├── research.ts              # 3. 事实研究（Google Search）
 │   │       ├── calibration.ts           # 4a. 语速校准
 │   │       ├── narrativeMap.ts          # 4b. 叙事地图
 │   │       ├── scriptGeneration.ts      # 5. 脚本生成
+│   │       ├── scriptAudit.ts           #    └─ 脚本自审子步骤
 │   │       ├── qaReview.ts              # 6. QA 三合一审查
 │   │       ├── storyboard.ts            # 7. 分镜规划
+│   │       ├── subjectIsolation.ts      #    └─ 主体隔离验证子步骤
 │   │       ├── referenceImage.ts        # 8. 参考图生成
 │   │       ├── keyframeGen.ts           # 9. 关键帧生成
 │   │       ├── videoGen.ts              # 10. 视频生成（img2video）
 │   │       ├── tts.ts                   # 11. TTS 语音合成
-│   │       └── refinement.ts            # 13. 自动精修（失败重试）
+│   │       ├── refinement.ts            # 13. 自动精修（失败重试）
+│   │       └── finalRiskGate.ts         #    └─ 终审风控门子步骤
 │   └── adapters/                 # AI 适配器层
 │       ├── chatAdapter.ts        # 免费聊天（Playwright 浏览器自动化）
 │       ├── geminiAdapter.ts      # 付费 Gemini API（@google/genai）
@@ -305,7 +309,7 @@ TTS 语音 ←── edge-tts 完全免费，不消耗任何 AI 额度
 | [ARCHITECTURE.md](ARCHITECTURE.md) | 架构设计：后端/前端/适配器/资源管理详解 |
 | [PIPELINE.md](PIPELINE.md) | 流水线设计：13 步详细说明、质量路由表、暂停机制 |
 | [DEPLOYMENT.md](DEPLOYMENT.md) | 部署指南：安装、Docker、Tauri、使用流程 |
-| [API.md](API.md) | API 接口文档：48 个端点详细说明 |
+| [API.md](API.md) | API 接口文档：54 个端点详细说明 |
 
 ---
 

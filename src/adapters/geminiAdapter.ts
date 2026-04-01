@@ -39,12 +39,14 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 3): Promise<T> {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       return await fn();
-    } catch (err: any) {
+    } catch (err: unknown) {
       lastErr = err;
       if (attempt === maxRetries) break;
 
-      const is429 = err?.status === 429 || err?.message?.includes('429');
-      const isTransient = is429 || err?.status === 503 || err?.status === 500;
+      const errObj = err as Record<string, unknown>;
+      const errMsg = err instanceof Error ? err.message : '';
+      const is429 = errObj?.status === 429 || errMsg.includes('429');
+      const isTransient = is429 || errObj?.status === 503 || errObj?.status === 500;
       if (!isTransient) break; // non-retryable
 
       const baseDelay = is429 ? 30_000 : 1000 * Math.pow(2, attempt);

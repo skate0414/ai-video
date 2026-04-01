@@ -168,7 +168,7 @@ export class PipelineOrchestrator {
     return JSON.parse(readFileSync(filePath, 'utf-8'));
   }
 
-  private saveArtifact(projectId: string, filename: string, data: any): void {
+  private saveArtifact(projectId: string, filename: string, data: unknown): void {
     const dir = this.getProjectDir(projectId);
     if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
     writeFileSync(join(dir, filename), JSON.stringify(data, null, 2));
