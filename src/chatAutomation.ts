@@ -48,7 +48,7 @@ export async function openChat(
   const currentUrl = page.url();
   const expectedHost = new URL(selectors.chatUrl).hostname;
   const actualHost = new URL(currentUrl).hostname;
-  if (actualHost !== expectedHost && !actualHost.includes('accounts.google')) {
+  if (actualHost !== expectedHost && !actualHost.endsWith('google.com')) {
     throw new Error(
       `Login required: page redirected from ${selectors.chatUrl} to ${currentUrl}. ` +
       'Please open a Login browser first and log into the site.',
@@ -326,11 +326,10 @@ async function waitForUploadCompletion(
     '[role="progressbar"]',
   ];
 
-  // Check if any progress indicator appears within the first 3 seconds
+  // Check if any progress indicator appears shortly after upload
   let hasProgressIndicator = false;
-  const startTime = Date.now();
 
-  await page.waitForTimeout(1_000); // brief pause for indicator to render
+  await page.waitForTimeout(300); // brief pause for indicator to render
 
   for (const sel of progressSelectors) {
     try {
@@ -351,14 +350,11 @@ async function waitForUploadCompletion(
       let anyActive = false;
       for (const sel of progressSelectors) {
         try {
-          const count = await page.locator(sel).count();
-          if (count > 0) {
-            // Check if any are visible
-            const visible = await page.locator(sel).first().isVisible().catch(() => false);
-            if (visible) {
-              anyActive = true;
-              break;
-            }
+          const locator = page.locator(sel);
+          const count = await locator.count();
+          if (count > 0 && await locator.first().isVisible().catch(() => false)) {
+            anyActive = true;
+            break;
           }
         } catch {
           // ignore

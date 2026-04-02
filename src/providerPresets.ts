@@ -115,6 +115,7 @@ export const PROVIDER_PRESETS: Record<string, SiteAutomationConfig> = {
         { selector: 'button[data-test-id="upload-button"]', method: 'css', priority: 1 },
       ],
     },
+    // Gemini 2025+ interface has a longer hydration cycle after redesign
     timing: { maxWaitMs: 180_000, pollIntervalMs: 2_000, hydrationDelayMs: 3_000 },
     profileDir: '',
     dailyLimits: { text: 50, images: 10 },
