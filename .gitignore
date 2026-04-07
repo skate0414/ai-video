@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test / Coverage
+coverage/
+
+# Runtime data
+data/
+browser/
+output/
+data/uploads/
+data/assets/
+data/projects/
+
+# Misc
+*.local
+.cache/
+.tmp/
+*.pem
+*.key
+
+# Tauri build
+ui/src-tauri/target/
+ui/src-tauri/binaries/
+ui/src-tauri/icons/*.png
+ui/src-tauri/icons/*.ico
+ui/src-tauri/icons/*.icns
