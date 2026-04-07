@@ -1,0 +1,51 @@
+{
+  "name": "ai-video",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI Video Pipeline — automated video generation with free-tier chat + paid API routing",
+  "type": "module",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "node --import tsx src/server.ts",
+    "dev:ui": "cd ui && npm run dev",
+    "start": "node --import tsx src/server.ts",
+    "start:backend:test": "node src/testing/scripts/start-server.mjs",
+    "build": "tsc --noEmit",
+    "build:ui": "cd ui && npm run build",
+    "build:sidecar": "bash scripts/build-sidecar.sh",
+    "build:tauri": "npm run build:sidecar && cd ui && npx tauri build",
+    "dev:tauri": "cd ui && npx tauri dev",
+    "test": "vitest run",
+    "test:backend": "tsc --noEmit && vitest run",
+    "test:watch": "vitest",
+    "accept:backend": "node src/testing/scripts/accept-backend.mjs",
+    "accept:backend:ci": "node src/testing/scripts/accept-backend.mjs --report-dir artifacts/backend-acceptance",
+    "accept:preflight": "node src/testing/scripts/preflight-health-check.mjs --strong",
+    "accept:create-project": "node src/testing/scripts/create-new-project.mjs",
+    "accept:auto-run": "node src/testing/scripts/auto-run-project.mjs",
+    "accept:check-progress": "node src/testing/scripts/check-progress.mjs",
+    "accept:check-scenes": "node src/testing/scripts/check-scenes.mjs",
+    "accept:recover-video": "node src/testing/scripts/retry-video-gen.mjs",
+    "accept:probe-account": "node src/testing/scripts/probe-account.mjs",
+    "debug:config": "node src/testing/scripts/check-config.mjs",
+    "debug:provider-login": "node src/testing/scripts/check-video-provider-login.mjs",
+    "debug:provider-dom": "node src/testing/scripts/inspect-provider-dom.mjs",
+    "auth:seedance": "node src/testing/scripts/open-seedance-login.mjs",
+    "auth:kling": "node src/testing/scripts/open-kling-login.mjs",
+    "typecheck": "tsc --noEmit && cd ui && npx tsc -b",
+    "lint": "tsc --noEmit && cd ui && npx tsc -b"
+  },
+  "dependencies": {
+    "@google/genai": "^1.47.0",
+    "undici": "^7.24.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "playwright": "^1.55.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.2"
+  }
+}
