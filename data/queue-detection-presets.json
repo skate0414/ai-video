@@ -1,0 +1,33 @@
+{
+  "klingai": {
+    "queueKeywords": [
+      "排队", "队列", "排队加速中", "生成中", "取消生成",
+      "in queue", "queued", "in line", "your position", "rendering",
+      "please wait", "estimated wait", "wait time", "eta", "processing"
+    ],
+    "etaPatterns": [
+      {
+        "regex": "(?:预计等待|约|~|大约|estimated\\s*wait|wait\\s*time|eta)\\s*[~≈]?\\s*(\\d+)\\s*(?:分钟|分|min(?:ute)?s?)",
+        "minutesGroup": 1
+      },
+      {
+        "regex": "[~≈]?\\s*(\\d+)\\s*(?:分钟?|min(?:ute)?s?)\\s*(\\d+)\\s*(?:秒|s(?:ec(?:ond)?s?)?)",
+        "minutesGroup": 1,
+        "secondsGroup": 2
+      },
+      {
+        "regex": "(?:wait|等待|eta|time|预计|估计)[^\\n]{0,30}?(\\d{1,3}):(\\d{2})",
+        "minutesGroup": 1,
+        "secondsGroup": 2
+      },
+      {
+        "regex": "(\\d+)\\s*(?:minutes?|mins?|分钟)",
+        "minutesGroup": 1
+      },
+      {
+        "regex": "(\\d+)\\s*(?:seconds?|secs?|秒)",
+        "secondsGroup": 1
+      }
+    ]
+  }
+}

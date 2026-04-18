@@ -1,0 +1,26 @@
+{
+  "projectId": "proj_1776362259557_3ad9be",
+  "startedAt": 1776362266725,
+  "stages": {
+    "CAPABILITY_ASSESSMENT": {
+      "stage": "CAPABILITY_ASSESSMENT",
+      "startedAt": 1776362267510,
+      "status": "completed",
+      "llmCallCount": 0,
+      "completedAt": 1776362267514,
+      "durationMs": 4
+    },
+    "STYLE_EXTRACTION": {
+      "stage": "STYLE_EXTRACTION",
+      "startedAt": 1776362267516,
+      "status": "error",
+      "llmCallCount": 0,
+      "completedAt": 1776362688502,
+      "durationMs": 420986,
+      "error": "Could not find a file upload trigger. Check the fileUploadTrigger selector in provider config."
+    }
+  },
+  "totalLlmCalls": 0,
+  "completedAt": 1776362688504,
+  "totalDurationMs": 421779
+}

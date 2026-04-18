@@ -1,0 +1,65 @@
+name: Build Desktop App
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-electron:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ubuntu-22.04
+            os: linux
+          - platform: macos-latest
+            os: mac
+          - platform: windows-latest
+            os: win
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install backend dependencies
+        run: npm ci
+
+      - name: Install UI dependencies
+        working-directory: ui
+        run: npm ci
+
+      - name: Build UI
+        working-directory: ui
+        run: npm run build
+
+      - name: Build backend sidecar
+        run: bash scripts/build-sidecar.sh
+
+      - name: Install browser-shell dependencies
+        working-directory: browser-shell
+        run: npm ci
+
+      - name: Build browser-shell
+        working-directory: browser-shell
+        run: npm run build
+
+      - name: Package Electron app
+        working-directory: browser-shell
+        run: npx electron-builder --config electron-builder.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-app-${{ matrix.os }}
+          path: browser-shell/release/*
+          if-no-files-found: warn

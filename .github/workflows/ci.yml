@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install ui dependencies
+        working-directory: ui
+        run: npm ci
+
+      - name: Install browser-shell dependencies
+        working-directory: browser-shell
+        run: npm ci
+
+      - name: Lint dependencies (TECH_CONSTRAINTS.md compliance)
+        run: npm run lint:deps:diff -- --skip-security
+
+      - name: Security audit
+        run: npm audit --audit-level=high || echo "::warning::Security vulnerabilities found. Run 'npm audit fix' to resolve."
+
+      - name: Typecheck backend
+        run: npx tsc --noEmit
+
+      - name: Typecheck frontend
+        working-directory: ui
+        run: npx tsc -b
+
+      - name: Typecheck browser-shell
+        working-directory: browser-shell
+        run: npx tsc --noEmit
+
+      - name: Test
+        run: npx vitest run

@@ -1,0 +1,65 @@
+[
+  {
+    "key": "proj_1776362259557_3ad9be:analysis",
+    "value": {
+      "group": "analysis",
+      "sessionId": "session_proj_1776362259557_3ad9be_analysis_1776362267508",
+      "stages": [
+        "CAPABILITY_ASSESSMENT",
+        "STYLE_EXTRACTION",
+        "RESEARCH"
+      ],
+      "useSameChat": false,
+      "messageCount": 0,
+      "createdAt": "2026-04-16T17:57:47.508Z"
+    }
+  },
+  {
+    "key": "proj_1776362259557_3ad9be:creation",
+    "value": {
+      "group": "creation",
+      "sessionId": "session_proj_1776362259557_3ad9be_creation_1776362267508",
+      "stages": [
+        "NARRATIVE_MAP",
+        "SCRIPT_GENERATION",
+        "QA_REVIEW",
+        "TEMPORAL_PLANNING"
+      ],
+      "useSameChat": false,
+      "messageCount": 0,
+      "createdAt": "2026-04-16T17:57:47.508Z"
+    }
+  },
+  {
+    "key": "proj_1776362259557_3ad9be:visual",
+    "value": {
+      "group": "visual",
+      "sessionId": "session_proj_1776362259557_3ad9be_visual_1776362267508",
+      "stages": [
+        "STORYBOARD",
+        "VIDEO_IR_COMPILE",
+        "REFERENCE_IMAGE",
+        "KEYFRAME_GEN"
+      ],
+      "useSameChat": false,
+      "messageCount": 0,
+      "createdAt": "2026-04-16T17:57:47.508Z"
+    }
+  },
+  {
+    "key": "proj_1776362259557_3ad9be:production",
+    "value": {
+      "group": "production",
+      "sessionId": "session_proj_1776362259557_3ad9be_production_1776362267508",
+      "stages": [
+        "VIDEO_GEN",
+        "TTS",
+        "ASSEMBLY",
+        "REFINEMENT"
+      ],
+      "useSameChat": false,
+      "messageCount": 0,
+      "createdAt": "2026-04-16T17:57:47.508Z"
+    }
+  }
+]

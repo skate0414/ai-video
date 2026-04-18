@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test / Coverage
+coverage/
+
+# Runtime data
+data/uploads/
+data/assets/
+data/cost-audit/
+data/accounts.json
+data/accounts.json.bak
+data/resources.json
+data/config.json
+data/providers.json
+data/profiles/*/
+!data/profiles/*/.gitkeep
+data/projects/*/ai-logs/
+data/projects/*/output/
+data/style-templates/
+browser/
+output/
+
+# Misc
+*.local
+.cache/
+.tmp/
+*.pem
+*.key
+
+# Electron / Browser Shell build
+browser-shell/dist/
+browser-shell/release/

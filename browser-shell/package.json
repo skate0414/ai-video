@@ -1,0 +1,23 @@
+{
+  "name": "ai-video-browser-shell",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Electron-based tabbed browser shell for AI Video Pipeline — integrates automation pages as tabs instead of separate windows",
+  "main": "dist/browser-shell/src/main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run build && electron .",
+    "build": "tsc && tsc -p tsconfig.preload.json && mv dist/browser-shell/src/preload.js dist/browser-shell/src/preload.cjs && mv dist/browser-shell/src/stealth-preload.js dist/browser-shell/src/stealth-preload.cjs && mkdir -p dist/browser-shell/src/renderer && cp -R src/renderer/. dist/browser-shell/src/renderer/",
+    "start": "electron .",
+    "typecheck": "tsc --noEmit",
+    "package": "electron-builder --config electron-builder.json"
+  },
+  "dependencies": {
+    "electron": "^41.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "typescript": "^5.8.3",
+    "electron-builder": "^26.0.0"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "id": "proj_1776033898763",
+  "title": "生而为人有多难得",
+  "topic": "生而为人有多难得",
+  "qualityTier": "free",
+  "createdAt": "2026-04-12T22:44:58.763Z",
+  "updatedAt": "2026-04-12T22:44:58.763Z",
+  "stageStatus": {
+    "CAPABILITY_ASSESSMENT": "pending",
+    "STYLE_EXTRACTION": "pending",
+    "RESEARCH": "pending",
+    "NARRATIVE_MAP": "pending",
+    "SCRIPT_GENERATION": "pending",
+    "QA_REVIEW": "pending",
+    "TEMPORAL_PLANNING": "pending",
+    "STORYBOARD": "pending",
+    "VIDEO_IR_COMPILE": "pending",
+    "REFERENCE_IMAGE": "pending",
+    "KEYFRAME_GEN": "pending",
+    "VIDEO_GEN": "pending",
+    "TTS": "pending",
+    "ASSEMBLY": "pending",
+    "REFINEMENT": "pending"
+  },
+  "pauseAfterStages": [
+    "QA_REVIEW",
+    "STORYBOARD",
+    "REFERENCE_IMAGE"
+  ],
+  "logs": [
+    {
+      "id": "log_1776033905999",
+      "timestamp": "2026-04-12T22:45:05.999Z",
+      "message": "Pipeline error: 未配置视频生成服务。VIDEO_GEN 阶段需要 aivideomaker API Key。请在设置中配置 aivideomaker API Key。",
+      "type": "error"
+    },
+    {
+      "id": "log_1776033906013",
+      "timestamp": "2026-04-12T22:45:06.013Z",
+      "message": "Pipeline proj_1776033898763:\n  Total duration: 0.0s\n  LLM calls: 0",
+      "type": "info"
+    },
+    {
+      "id": "log_1776033970762",
+      "timestamp": "2026-04-12T22:46:10.762Z",
+      "message": "Pipeline error: 资源不满足：以下阶段无可用服务商 — VIDEO_GEN (需要 videoGeneration)。请在设置中配置支持所需能力的服务商账号，并确保浏览器 Profile 目录存在。",
+      "type": "error"
+    },
+    {
+      "id": "log_1776033970764",
+      "timestamp": "2026-04-12T22:46:10.764Z",
+      "message": "Pipeline proj_1776033898763:\n  Total duration: 0.8s\n  LLM calls: 0",
+      "type": "info"
+    }
+  ],
+  "referenceVideoPath": "/Users/97jiyu/Downloads/ai-video-main/ai-video-main/data/uploads/你的身体有多爱你.mp4",
+  "error": "资源不满足：以下阶段无可用服务商 — VIDEO_GEN (需要 videoGeneration)。请在设置中配置支持所需能力的服务商账号，并确保浏览器 Profile 目录存在。"
+}

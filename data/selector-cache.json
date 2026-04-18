@@ -1,0 +1,9 @@
+{
+  "gemini": {
+    "selectors": {
+      "promptInput": "div[aria-label=\"为 Gemini 输入提示\"]",
+      "readyIndicator": "div[aria-label=\"为 Gemini 输入提示\"]"
+    },
+    "detectedAt": "2026-04-16T17:59:42.308Z"
+  }
+}

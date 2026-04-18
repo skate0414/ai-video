@@ -1,0 +1,65 @@
+{
+  "gemini": {
+    "text": true,
+    "imageGeneration": true,
+    "videoGeneration": false,
+    "fileUpload": true,
+    "webSearch": true,
+    "tts": false,
+    "dailyLimits": { "textQueries": 50, "imageGenerations": 10 }
+  },
+  "chatgpt": {
+    "text": true,
+    "imageGeneration": true,
+    "videoGeneration": false,
+    "fileUpload": true,
+    "webSearch": true,
+    "tts": false,
+    "dailyLimits": { "textQueries": 40 }
+  },
+  "deepseek": {
+    "text": true,
+    "imageGeneration": false,
+    "videoGeneration": false,
+    "fileUpload": false,
+    "webSearch": true,
+    "tts": false,
+    "dailyLimits": { "textQueries": 50 }
+  },
+  "kimi": {
+    "text": true,
+    "imageGeneration": false,
+    "videoGeneration": false,
+    "fileUpload": true,
+    "webSearch": true,
+    "tts": false,
+    "dailyLimits": { "textQueries": 50 }
+  },
+  "seedance": {
+    "text": false,
+    "imageGeneration": false,
+    "videoGeneration": true,
+    "fileUpload": true,
+    "webSearch": false,
+    "tts": false,
+    "dailyLimits": { "videoGenerations": 5 }
+  },
+  "jimeng": {
+    "text": false,
+    "imageGeneration": false,
+    "videoGeneration": true,
+    "fileUpload": true,
+    "webSearch": false,
+    "tts": false,
+    "dailyLimits": { "videoGenerations": 5 }
+  },
+  "claude": {
+    "text": true,
+    "imageGeneration": false,
+    "videoGeneration": false,
+    "fileUpload": true,
+    "webSearch": false,
+    "tts": false,
+    "dailyLimits": { "textQueries": 45 }
+  }
+}

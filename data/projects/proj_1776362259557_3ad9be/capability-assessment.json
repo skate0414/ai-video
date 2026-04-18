@@ -1,0 +1,13 @@
+{
+  "safetyCheck": {
+    "safe": true,
+    "reason": "Topic passed safety check"
+  },
+  "probedProviders": [
+    "chatgpt",
+    "gemini",
+    "deepseek",
+    "kimi",
+    "aivideomaker"
+  ]
+}

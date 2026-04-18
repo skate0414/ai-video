@@ -1,0 +1,67 @@
+{
+  "v": 1,
+  "traceId": "b58504bc9be39d95dcacd16c091c8c08",
+  "projectId": "proj_1776033898763",
+  "topic": "生而为人有多难得",
+  "qualityTier": "free",
+  "startedAt": "2026-04-12T22:45:05.986Z",
+  "endedAt": "2026-04-12T22:45:06.011Z",
+  "durationMs": 25,
+  "outcome": "error",
+  "terminalFailure": {
+    "message": "未配置视频生成服务。VIDEO_GEN 阶段需要 aivideomaker API Key。请在设置中配置 aivideomaker API Key。",
+    "errorType": "Error",
+    "stack": "Error: 未配置视频生成服务。VIDEO_GEN 阶段需要 aivideomaker API Key。请在设置中配置 aivideomaker API Key。\n    at PipelineOrchestrator.run (/Users/97jiyu/Downloads/ai-video-main/ai-video-main/src/pipeline/orchestrator.ts:474:17)\n    at PipelineService.startPipeline (/Users/97jiyu/Downloads/ai-video-main/ai-video-main/src/pipeline/pipelineService.ts:155:23)\n    at Object.handler (/Users/97jiyu/Downloads/ai-video-main/ai-video-main/src/routes/pipeline.ts:93:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async handleRequest (/Users/97jiyu/Downloads/ai-video-main/ai-video-main/src/server.ts:242:7)",
+    "category": "unknown",
+    "code": "UNCLASSIFIED",
+    "retryable": false
+  },
+  "events": [
+    {
+      "v": 1,
+      "kind": "pipeline.start",
+      "trace": {
+        "traceId": "b58504bc9be39d95dcacd16c091c8c08",
+        "spanId": "8758be8ace2a40e1"
+      },
+      "projectId": "proj_1776033898763",
+      "ts": "2026-04-12T22:45:05.986Z",
+      "tsMs": 1776033905986,
+      "data": {
+        "topic": "生而为人有多难得",
+        "qualityTier": "free",
+        "totalStages": 15
+      }
+    },
+    {
+      "v": 1,
+      "kind": "pipeline.error",
+      "trace": {
+        "traceId": "b58504bc9be39d95dcacd16c091c8c08",
+        "spanId": "8758be8ace2a40e1"
+      },
+      "projectId": "proj_1776033898763",
+      "ts": "2026-04-12T22:45:06.011Z",
+      "tsMs": 1776033906011,
+      "data": {
+        "failure": {
+          "message": "未配置视频生成服务。VIDEO_GEN 阶段需要 aivideomaker API Key。请在设置中配置 aivideomaker API Key。",
+          "errorType": "Error",
+          "stack": "Error: 未配置视频生成服务。VIDEO_GEN 阶段需要 aivideomaker API Key。请在设置中配置 aivideomaker API Key。\n    at PipelineOrchestrator.run (/Users/97jiyu/Downloads/ai-video-main/ai-video-main/src/pipeline/orchestrator.ts:474:17)\n    at PipelineService.startPipeline (/Users/97jiyu/Downloads/ai-video-main/ai-video-main/src/pipeline/pipelineService.ts:155:23)\n    at Object.handler (/Users/97jiyu/Downloads/ai-video-main/ai-video-main/src/routes/pipeline.ts:93:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async handleRequest (/Users/97jiyu/Downloads/ai-video-main/ai-video-main/src/server.ts:242:7)",
+          "category": "unknown",
+          "code": "UNCLASSIFIED",
+          "retryable": false
+        },
+        "durationMs": 25
+      }
+    }
+  ],
+  "stageSummary": {},
+  "totals": {
+    "stagesCompleted": 0,
+    "stagesFailed": 0,
+    "llmCalls": 0,
+    "costUsd": 0,
+    "retries": 0
+  }
+}

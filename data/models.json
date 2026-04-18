@@ -1,0 +1,38 @@
+{
+  "gemini": [
+    {
+      "id": "fast",
+      "label": "Fast",
+      "selectSteps": [
+        ".model-picker-container button, button[aria-label*=\"model\" i], button[aria-haspopup=\"listbox\"]",
+        "text=Fast"
+      ]
+    },
+    {
+      "id": "thinking",
+      "label": "Thinking",
+      "selectSteps": [
+        ".model-picker-container button, button[aria-label*=\"model\" i], button[aria-haspopup=\"listbox\"]",
+        "text=Thinking"
+      ]
+    },
+    {
+      "id": "pro",
+      "label": "Pro",
+      "selectSteps": [
+        ".model-picker-container button, button[aria-label*=\"model\" i], button[aria-haspopup=\"listbox\"]",
+        "text=Pro"
+      ]
+    }
+  ],
+  "chatgpt": [
+    {
+      "id": "chatgpt",
+      "label": "ChatGPT",
+      "selectSteps": [
+        "button[data-testid=\"model-switcher-dropdown-button\"]",
+        "text=ChatGPT"
+      ]
+    }
+  ]
+}

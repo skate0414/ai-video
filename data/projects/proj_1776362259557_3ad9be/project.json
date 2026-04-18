@@ -1,0 +1,169 @@
+{
+  "id": "proj_1776362259557_3ad9be",
+  "title": "你的免疫系统有多拼命",
+  "topic": "你的免疫系统有多拼命",
+  "createdAt": "2026-04-16T17:57:39.557Z",
+  "updatedAt": "2026-04-16T17:57:47.513Z",
+  "stageStatus": {
+    "CAPABILITY_ASSESSMENT": "completed",
+    "STYLE_EXTRACTION": "error",
+    "RESEARCH": "pending",
+    "NARRATIVE_MAP": "pending",
+    "SCRIPT_GENERATION": "pending",
+    "QA_REVIEW": "pending",
+    "TEMPORAL_PLANNING": "pending",
+    "STORYBOARD": "pending",
+    "VIDEO_IR_COMPILE": "pending",
+    "REFERENCE_IMAGE": "pending",
+    "KEYFRAME_GEN": "pending",
+    "VIDEO_GEN": "pending",
+    "TTS": "pending",
+    "ASSEMBLY": "pending",
+    "REFINEMENT": "pending"
+  },
+  "pauseAfterStages": [
+    "QA_REVIEW",
+    "STORYBOARD",
+    "REFERENCE_IMAGE"
+  ],
+  "logs": [
+    {
+      "id": "log_preflight_noprofile_1776362267509",
+      "timestamp": "2026-04-16T17:57:47.509Z",
+      "message": "⚠️ 所有已配置的服务商 (chatgpt, gemini, deepseek, kimi, aivideomaker) 均缺少浏览器 Profile 目录，将使用 API 适配器。",
+      "type": "warning",
+      "stage": "VIDEO_GEN"
+    },
+    {
+      "id": "log_1776362267512_yojl",
+      "timestamp": "2026-04-16T17:57:47.512Z",
+      "message": "Safety check passed",
+      "type": "info",
+      "stage": "CAPABILITY_ASSESSMENT"
+    },
+    {
+      "id": "log_1776362267513_wiy5",
+      "timestamp": "2026-04-16T17:57:47.513Z",
+      "message": "Detected 5 configured provider(s):",
+      "type": "info",
+      "stage": "CAPABILITY_ASSESSMENT"
+    },
+    {
+      "id": "log_1776362267513_9hv3",
+      "timestamp": "2026-04-16T17:57:47.513Z",
+      "message": "  chatgpt: text=true, image=true, video=false, search=true, upload=true — ❌ no profile dir",
+      "type": "info",
+      "stage": "CAPABILITY_ASSESSMENT"
+    },
+    {
+      "id": "log_1776362267513_kpch",
+      "timestamp": "2026-04-16T17:57:47.513Z",
+      "message": "  gemini: text=true, image=true, video=false, search=true, upload=true — ❌ no profile dir",
+      "type": "info",
+      "stage": "CAPABILITY_ASSESSMENT"
+    },
+    {
+      "id": "log_1776362267513_bjnz",
+      "timestamp": "2026-04-16T17:57:47.513Z",
+      "message": "  deepseek: text=true, image=false, video=false, search=true, upload=false — ❌ no profile dir",
+      "type": "info",
+      "stage": "CAPABILITY_ASSESSMENT"
+    },
+    {
+      "id": "log_1776362267513_cfn8",
+      "timestamp": "2026-04-16T17:57:47.513Z",
+      "message": "  kimi: text=true, image=false, video=false, search=true, upload=true — ❌ no profile dir",
+      "type": "info",
+      "stage": "CAPABILITY_ASSESSMENT"
+    },
+    {
+      "id": "log_1776362267513_e4fp",
+      "timestamp": "2026-04-16T17:57:47.513Z",
+      "message": "  aivideomaker: text=true, image=false, video=false, search=false, upload=false — ❌ no profile dir",
+      "type": "info",
+      "stage": "CAPABILITY_ASSESSMENT"
+    },
+    {
+      "id": "log_1776362267517",
+      "timestamp": "2026-04-16T17:57:47.517Z",
+      "message": "Analyzing reference video: /Users/97jiyu/Downloads/ai-video-main/ai-video-main/data/uploads/你的身体有多爱你.mp4",
+      "type": "info",
+      "stage": "STYLE_EXTRACTION"
+    },
+    {
+      "id": "log_1776362267517_owfk",
+      "timestamp": "2026-04-16T17:57:47.517Z",
+      "message": "Uploading reference video for style analysis...",
+      "type": "info",
+      "stage": "STYLE_EXTRACTION"
+    },
+    {
+      "id": "log_1776362364309_ep2y",
+      "timestamp": "2026-04-16T17:59:24.309Z",
+      "message": "Skipping self-assessment pre-pass for faster style extraction",
+      "type": "info",
+      "stage": "STYLE_EXTRACTION"
+    },
+    {
+      "id": "log_1776362364310_5m6v",
+      "timestamp": "2026-04-16T17:59:24.310Z",
+      "message": "Extracting StyleDNA from reference video...",
+      "type": "info",
+      "stage": "STYLE_EXTRACTION"
+    },
+    {
+      "id": "log_1776362549106",
+      "timestamp": "2026-04-16T18:02:29.106Z",
+      "message": "STYLE_EXTRACTION failed (attempt 1/2): Could not find a file upload trigger. Check the fileUploadTrigger selector in provider config.. Retrying in 2621ms...",
+      "type": "warning",
+      "stage": "STYLE_EXTRACTION"
+    },
+    {
+      "id": "log_1776362551780",
+      "timestamp": "2026-04-16T18:02:31.780Z",
+      "message": "Analyzing reference video: /Users/97jiyu/Downloads/ai-video-main/ai-video-main/data/uploads/你的身体有多爱你.mp4",
+      "type": "info",
+      "stage": "STYLE_EXTRACTION"
+    },
+    {
+      "id": "log_1776362551782_fq9q",
+      "timestamp": "2026-04-16T18:02:31.782Z",
+      "message": "Uploading reference video for style analysis...",
+      "type": "info",
+      "stage": "STYLE_EXTRACTION"
+    },
+    {
+      "id": "log_1776362551794_0mwj",
+      "timestamp": "2026-04-16T18:02:31.794Z",
+      "message": "Skipping self-assessment pre-pass for faster style extraction",
+      "type": "info",
+      "stage": "STYLE_EXTRACTION"
+    },
+    {
+      "id": "log_1776362551795_ed58",
+      "timestamp": "2026-04-16T18:02:31.795Z",
+      "message": "Extracting StyleDNA from reference video...",
+      "type": "info",
+      "stage": "STYLE_EXTRACTION"
+    },
+    {
+      "id": "log_1776362688503",
+      "timestamp": "2026-04-16T18:04:48.503Z",
+      "message": "Pipeline error: Could not find a file upload trigger. Check the fileUploadTrigger selector in provider config.",
+      "type": "error"
+    },
+    {
+      "id": "log_1776362688505",
+      "timestamp": "2026-04-16T18:04:48.505Z",
+      "message": "Pipeline proj_1776362259557_3ad9be:\n  Total duration: 421.8s\n  LLM calls: 0\n  CAPABILITY_ASSESSMENT: completed [0.0s] 0 calls\n  STYLE_EXTRACTION: error [421.0s] 0 calls",
+      "type": "info"
+    }
+  ],
+  "referenceVideoPath": "/Users/97jiyu/Downloads/ai-video-main/ai-video-main/data/uploads/你的身体有多爱你.mp4",
+  "currentStage": "STYLE_EXTRACTION",
+  "safetyCheck": {
+    "safe": true,
+    "reason": "Topic passed safety check"
+  },
+  "error": "Could not find a file upload trigger. Check the fileUploadTrigger selector in provider config."
+}
