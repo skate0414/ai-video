@@ -441,7 +441,7 @@ export class PipelineService {
 
   /* ---- Config management ---- */
 
-  getConfig(): { productionConcurrency: number; videoProviderConfig?: any } {
+  getConfig(): { productionConcurrency: number; videoProviderConfig?: VideoProviderConfig } {
     return getConfigEntry(this.configStore);
   }
 

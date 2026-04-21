@@ -4,6 +4,10 @@ import type { ConfigStore } from './configStore.js';
 import type { VideoProviderConfig } from './videoProvider.js';
 import type { QueueDetectionConfig } from './runtimeTypes.js';
 import {
+  DEFAULT_REFINE_OPTIONS,
+  packagingStyleToRefineOptions,
+} from './types/domain/refine.js';
+import {
   deleteQueueDetectionOverride,
   getQueueDetectionPresets,
   saveQueueDetectionOverrides,
@@ -56,17 +60,17 @@ export function completeSetup(
   return { ok: true };
 }
 
-export function getConfig(configStore: ConfigStore): { productionConcurrency: number; videoProviderConfig?: any } {
+export function getConfig(configStore: ConfigStore): { productionConcurrency: number; videoProviderConfig?: VideoProviderConfig } {
   const saved = configStore.get();
   const vpConfig = saved.videoProviderConfig;
-  const profileDirs = (vpConfig as any)?.profileDirs?.length
-    ? (vpConfig as any).profileDirs
-    : (vpConfig as any)?.profileDir
-      ? [(vpConfig as any).profileDir]
+  const profileDirs = vpConfig?.profileDirs?.length
+    ? vpConfig.profileDirs
+    : vpConfig?.profileDir
+      ? [vpConfig.profileDir]
       : [];
   return {
     productionConcurrency: saved.productionConcurrency ?? 2,
-    videoProviderConfig: profileDirs.length > 0 ? { profileDirs } : undefined,
+    videoProviderConfig: profileDirs.length > 0 ? { ...vpConfig, profileDirs } as VideoProviderConfig : undefined,
   };
 }
 
@@ -89,8 +93,8 @@ export function updateConfig(
 
 export function getVideoProviderConfig(
   configStore: ConfigStore,
-  getVideoConfig?: () => Record<string, any> | null,
-): unknown {
+  getVideoConfig?: () => VideoProviderConfig | null,
+): VideoProviderConfig | null {
   return getVideoConfig?.() ?? configStore.get().videoProviderConfig ?? null;
 }
 
@@ -127,7 +131,6 @@ export function getRefineOptions(
   orchestrator: PipelineOrchestrator,
   projectId: string,
 ): CoreRefineOptions {
-  const { DEFAULT_REFINE_OPTIONS, packagingStyleToRefineOptions } = require('./sharedTypes.js') as typeof import('./sharedTypes.js');
   const projectDir = orchestrator.getProjectDir(projectId);
   const optionsPath = join(projectDir, 'refine-options.json');
 
@@ -158,7 +161,6 @@ export function getRefineOptions(
 }
 
 export function getRefineProvenance(orchestrator: PipelineOrchestrator, projectId: string): string[] {
-  const { packagingStyleToRefineOptions } = require('./sharedTypes.js') as typeof import('./sharedTypes.js');
   const projectDir = orchestrator.getProjectDir(projectId);
   try {
     const cirPath = join(projectDir, 'style-analysis.cir.json');
@@ -179,7 +181,6 @@ export function getRefineReferenceDefaults(
   orchestrator: PipelineOrchestrator,
   projectId: string,
 ): CoreRefineOptions {
-  const { DEFAULT_REFINE_OPTIONS, packagingStyleToRefineOptions } = require('./sharedTypes.js') as typeof import('./sharedTypes.js');
   const projectDir = orchestrator.getProjectDir(projectId);
   let smartDefaults: Partial<CoreRefineOptions> = {};
   try {

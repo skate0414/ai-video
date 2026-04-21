@@ -23,6 +23,49 @@ import { computeBackoffDelay, getRetryBudget } from './retryResilience.js';
 
 const slog = createLogger('VideoGen');
 
+/* ------------------------------------------------------------------ */
+/*  WorkerDispatch — quota-aware concurrent work distribution         */
+/*                                                                     */
+/*  Manages a shared work queue consumed by N adapters in parallel.   */
+/*  When an adapter exhausts its quota it marks itself depleted so    */
+/*  the dispatch layer can re-route its remaining items to healthy    */
+/*  adapters instead of dropping them.                                */
+/* ------------------------------------------------------------------ */
+
+interface WorkerDispatch<T> {
+  /** Claim the next pending item. Returns undefined when the queue is empty. */
+  claimNext(): T | undefined;
+  /** Return an item to the queue (e.g. on quota depletion before processing). */
+  returnItem(item: T): void;
+  /** Mark a worker as quota-depleted; it will receive no more items. */
+  markDepleted(workerId: number): void;
+  /** True when this specific worker has been marked depleted. */
+  isDepleted(workerId: number): boolean;
+  /** Number of items still waiting to be claimed. */
+  pendingCount(): number;
+  /** True when every one of the `totalWorkers` workers is depleted. */
+  allDepleted(totalWorkers: number): boolean;
+  /** All items not yet claimed (snapshot, for exhaustion reporting). */
+  unclaimed(): T[];
+}
+
+function createWorkerDispatch<T>(items: T[]): WorkerDispatch<T> {
+  const queue = [...items];
+  let head = 0;
+  const depleted = new Set<number>();
+  return {
+    claimNext: () => (head >= queue.length ? undefined : queue[head++]),
+    returnItem: (item: T) => { queue.push(item); },
+    markDepleted: (id: number) => depleted.add(id),
+    isDepleted: (id: number) => depleted.has(id),
+    pendingCount: () => queue.length - head,
+    allDepleted: (total: number) => depleted.size >= total,
+    unclaimed: () => queue.slice(head),
+  };
+}
+
+/* ------------------------------------------------------------------ */
+
 export interface VideoGenInput {
   scenes: Scene[];
   videoIR: VideoIR;
@@ -83,18 +126,12 @@ export async function runVideoGen(
     }
   }
 
-  const queue = [...videoScenes];
-  let queueHead = 0;
-  const depletedWorkers = new Set<number>();
-  const claimNext = () => (queueHead >= queue.length ? undefined : queue[queueHead++]);
-  const returnToQueue = (item: { index: number; scene: Scene }) => {
-    queue.push(item);
-  };
+  const dispatch = createWorkerDispatch(videoScenes);
 
   async function worker(workerAdapter: AIAdapter, workerId: number) {
     while (true) {
-      if (depletedWorkers.has(workerId)) break;
-      const item = claimNext();
+      if (dispatch.isDepleted(workerId)) break;
+      const item = dispatch.claimNext();
       if (!item) break;
       const { index, scene } = item;
       let succeeded = false;
@@ -204,13 +241,13 @@ export async function runVideoGen(
           const msg = err instanceof Error ? err.message : String(err);
           if ((err as any)?.isQuotaError) {
             emit(log(`[W${workerId}] Quota depleted — returning scene ${scene.number} to queue`, 'warning'));
-            depletedWorkers.add(workerId);
+            dispatch.markDepleted(workerId);
             quotaDepleted = true;
             results[index].status = 'pending';
             results[index].progressMessage = undefined;
             results[index].assetUrl = undefined as any;
             results[index].assetType = 'video';
-            returnToQueue(item);
+            dispatch.returnItem(item);
             break;
           }
           results[index].logs.push(`Video gen attempt ${attempt + 1} error: ${msg}`);
@@ -243,16 +280,14 @@ export async function runVideoGen(
 
   if (adapters.length > 0 && videoScenes.length > 0) {
     await Promise.all(adapters.map((a, i) => worker(a, i)));
-    while (queueHead < queue.length && depletedWorkers.size < adapters.length) {
-      const remaining = queue.length - queueHead;
-      const healthyAdapters = adapters.map((a, i) => ({ adapter: a, id: i })).filter(w => !depletedWorkers.has(w.id));
-      emit(log(`Re-dispatching ${remaining} returned scene(s) to ${healthyAdapters.length} healthy worker(s)`, 'info'));
+    while (dispatch.pendingCount() > 0 && !dispatch.allDepleted(adapters.length)) {
+      const healthyAdapters = adapters.map((a, i) => ({ adapter: a, id: i })).filter(w => !dispatch.isDepleted(w.id));
+      emit(log(`Re-dispatching ${dispatch.pendingCount()} returned scene(s) to ${healthyAdapters.length} healthy worker(s)`, 'info'));
       await Promise.all(healthyAdapters.map(w => worker(w.adapter, w.id)));
     }
 
-    if (depletedWorkers.size === adapters.length && queueHead < queue.length) {
-      for (let i = queueHead; i < queue.length; i++) {
-        const { index, scene } = queue[i];
+    if (dispatch.allDepleted(adapters.length) && dispatch.pendingCount() > 0) {
+      for (const { index, scene } of dispatch.unclaimed()) {
         if (results[index].status !== 'done') {
           const msg = `All ${adapters.length} accounts depleted — no worker available`;
           emit(log(`Scene ${scene.number}: ${msg}`, 'warning'));

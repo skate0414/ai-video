@@ -9,6 +9,7 @@ import type {
 import type { ProjectStore } from './projectStore.js';
 import type { ProviderCapabilityRegistry } from './providerRegistry.js';
 import type { PipelineServices } from './pipelineServices.js';
+import type { VideoProviderConfig } from './videoProvider.js';
 
 export interface StageRunContext {
   project: PipelineProject;
@@ -29,7 +30,7 @@ export interface StageRunContext {
 }
 
 export interface StageRunConfig {
-  videoProviderConfig?: any;
+  videoProviderConfig?: VideoProviderConfig;
   videoModel?: string;
   videoResolution?: '720p' | '1080p';
   productionConcurrency: number;

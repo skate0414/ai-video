@@ -55,4 +55,4 @@ export type {
   CalibrationData,
 } from './types.video.js';
 
-export type { PipelineProject } from './types.project.js';
+export type { PipelineProject, ProjectMeta } from './types.project.js';

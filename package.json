@@ -29,7 +29,7 @@
     "test": "vitest run",
     "test:backend": "npm run build && vitest run",
     "test:watch": "vitest",
-    "check:strict-progress": "node scripts/check-strict-progress.mjs --baseline 77",
+    "check:strict-progress": "node scripts/check-strict-progress.mjs --baseline 75",
     "accept:backend": "node scripts/testing/scripts/accept-backend.mjs",
     "accept:backend:ci": "node scripts/testing/scripts/accept-backend.mjs --report-dir artifacts/backend-acceptance",
     "accept:preflight": "node scripts/testing/scripts/preflight-health-check.mjs --strong",

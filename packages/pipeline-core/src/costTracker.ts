@@ -1,4 +1,3 @@
-// @ts-nocheck -- see tsconfig.json noUncheckedIndexedAccess migration (scripts/check-strict-progress.mjs)
 /* ------------------------------------------------------------------ */
 /*  CostTracker – compilation resource accounting                     */
 /*  Records per-pass and per-backend cost for each compilation run.   */
@@ -300,13 +299,13 @@ export class CostTracker {
     const byMethod: Record<string, { costUsd: number; calls: number }> = {};
 
     for (const e of projectEntries) {
-      if (!byStage[e.stage]) byStage[e.stage] = { costUsd: 0, calls: 0 };
-      byStage[e.stage].costUsd += e.estimatedCostUsd;
-      byStage[e.stage].calls++;
+      const stageBucket = (byStage[e.stage] ??= { costUsd: 0, calls: 0 });
+      stageBucket.costUsd += e.estimatedCostUsd;
+      stageBucket.calls++;
 
-      if (!byMethod[e.method]) byMethod[e.method] = { costUsd: 0, calls: 0 };
-      byMethod[e.method].costUsd += e.estimatedCostUsd;
-      byMethod[e.method].calls++;
+      const methodBucket = (byMethod[e.method] ??= { costUsd: 0, calls: 0 });
+      methodBucket.costUsd += e.estimatedCostUsd;
+      methodBucket.calls++;
     }
 
     return {
@@ -328,14 +327,14 @@ export class CostTracker {
     const dailyTotals: Record<string, { costUsd: number; calls: number }> = {};
 
     for (const e of this.entries) {
-      if (!byProject[e.projectId]) byProject[e.projectId] = { costUsd: 0, calls: 0 };
-      byProject[e.projectId].costUsd += e.estimatedCostUsd;
-      byProject[e.projectId].calls++;
+      const projectBucket = (byProject[e.projectId] ??= { costUsd: 0, calls: 0 });
+      projectBucket.costUsd += e.estimatedCostUsd;
+      projectBucket.calls++;
 
       const day = e.timestamp.slice(0, 10); // YYYY-MM-DD
-      if (!dailyTotals[day]) dailyTotals[day] = { costUsd: 0, calls: 0 };
-      dailyTotals[day].costUsd += e.estimatedCostUsd;
-      dailyTotals[day].calls++;
+      const dayBucket = (dailyTotals[day] ??= { costUsd: 0, calls: 0 });
+      dayBucket.costUsd += e.estimatedCostUsd;
+      dayBucket.calls++;
     }
 
     return {

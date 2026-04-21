@@ -1,4 +1,3 @@
-// @ts-nocheck -- see tsconfig.json noUncheckedIndexedAccess migration (scripts/check-strict-progress.mjs)
 /* ------------------------------------------------------------------ */
 /*  Safety middleware – content taint analysis and sanitization        */
 /*  Inspects compiler output for unsafe numeric claims, medical       */
@@ -33,8 +32,9 @@ function detectNumericIssues(text: string): { issues: string[]; spans: ExcerptSp
   const issues: string[] = [];
   const spans: ExcerptSpan[] = [];
 
-  for (const match of Array.from(text.matchAll(numberRegex))) {
+  for (const match of text.matchAll(numberRegex)) {
     const raw = match[1];
+    if (!raw) continue;
     const value = parseFloat(raw);
     if (!isNaN(value) && value > MAX_REASONABLE_NUMBER) {
       issues.push(`Unrealistic magnitude: ${raw}`);

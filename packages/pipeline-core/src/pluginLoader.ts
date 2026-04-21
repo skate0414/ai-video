@@ -21,7 +21,7 @@
  * plugins. Strict mode promotes any failure to a thrown error.
  */
 
-import { createHash, verify as nodeVerify } from 'node:crypto';
+import { createHash, createPublicKey, verify as nodeVerify } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -133,8 +133,6 @@ function ed25519Verify(publicKeyHex: string, signatureHex: string, message: stri
   // Build a KeyObject via createPublicKey to keep the API simple.
   // We deliberately use the synchronous verify API — the work is tiny
   // (32-byte key, 64-byte signature).
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { createPublicKey } = require('node:crypto') as typeof import('node:crypto');
   const key = createPublicKey({ key: keyDer, format: 'der', type: 'spki' });
   return nodeVerify(null, Buffer.from(message, 'utf8'), key, Buffer.from(signatureHex, 'hex'));
 }
