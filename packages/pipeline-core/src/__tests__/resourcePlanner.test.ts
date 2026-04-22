@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+// Side-effect: registers video stage definitions so getStageOrder() returns the full pipeline.
+import '@ai-video/pipeline-video/stageDefinitions.js';
 import { generateResourcePlan } from '../resourcePlanner.js';
 import { ProviderCapabilityRegistry, type AccountSeed } from '../providerRegistry.js';
 import { SessionManager } from '../sessionManager.js';

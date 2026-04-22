@@ -8,6 +8,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mkdtempSync, rmSync, existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+// Side-effect: registers video stage definitions so all 15 pipeline stages are available.
+import '@ai-video/pipeline-video/stageDefinitions.js';
 import { PipelineOrchestrator, SafetyBlockError } from '../orchestrator.js';
 import { SSE_EVENT } from '../pipelineTypes.js';
 import type { AIAdapter, PipelineEvent, PipelineProject, GenerationResult, Scene } from '../pipelineTypes.js';

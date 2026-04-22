@@ -4,9 +4,9 @@
  * Façade for the video-specific stage modules and the assembler
  * built on top of `@ai-video/pipeline-core`.
  *
- * **CIR** canonical implementation: `packages/pipeline-video/src/cir/` (re-exported from
- * `@ai-video/pipeline-core/cir/*`). **Stages** below re-export from `@ai-video/pipeline-core`
- * or local `./stages/*` where video-only helpers live.
+ * **CIR** canonical implementation: `packages/pipeline-video/src/cir/`.
+ * **Stage definitions** live in `packages/pipeline-video/src/stages/defs/`
+ * and are registered here as a side-effect.
  */
 
 export const PACKAGE_VERSION = '0.0.0';
@@ -17,7 +17,7 @@ export const PACKAGE_VERSION = '0.0.0';
  * `import '@ai-video/pipeline-video'` to opt into the full video
  * compilation pipeline.
  */
-import '@ai-video/pipeline-core/stageDefinitions.js';
+import './stages/defs/index.js';
 
 /* ---- Stage entry-point modules (re-exported for direct use) ---- */
 export * as capabilityAssessment from '@ai-video/pipeline-core/stages/capabilityAssessment.js';

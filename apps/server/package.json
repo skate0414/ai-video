@@ -5,6 +5,7 @@
   "description": "HTTP/SSE backend workspace. apps/server/src/main.ts is the active runtime entry (repo-root src/ removed PR-7).",
   "dependencies": {
     "@ai-video/pipeline-core": "*",
+    "@ai-video/pipeline-video": "*",
     "@ai-video/shared": "*"
   },
   "type": "module",

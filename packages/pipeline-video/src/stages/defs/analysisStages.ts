@@ -1,8 +1,14 @@
-/* Moved to @ai-video/pipeline-video — see packages/pipeline-video/src/stages/defs/analysisStages.ts */
-export {};
-import { ARTIFACT } from '../../constants.js';
-import { SSE_EVENT } from '../../sharedTypes.js';
-import { registerStage, type StageRunContext } from '../../stageRegistry.js';
+/* ------------------------------------------------------------------ */
+/*  Pass definitions – analysis group (frontend passes)               */
+/*  (CAPABILITY_ASSESSMENT, STYLE_EXTRACTION, RESEARCH)               */
+/*  These are the compiler's "lexing/parsing" passes that produce     */
+/*  StyleAnalysisCIR and ResearchCIR from raw source input.           */
+/* ------------------------------------------------------------------ */
+
+import { existsSync } from 'node:fs';
+import { ARTIFACT } from '@ai-video/pipeline-core/constants.js';
+import { SSE_EVENT } from '@ai-video/pipeline-core/sharedTypes.js';
+import { registerStage, type StageRunContext } from '@ai-video/pipeline-core/stageRegistry.js';
 import {
   extractFormatSignature,
   runCapabilityAssessment,
@@ -10,8 +16,8 @@ import {
   runResearch,
   runShotAnalysis,
   runStyleExtraction,
-} from '../../stages/index.js';
-import { validateStyleContract } from '../../styleContract.js';
+} from '@ai-video/pipeline-core/stages/index.js';
+import { validateStyleContract } from '@ai-video/pipeline-core/styleContract.js';
 import { parseStyleAnalysisCIR, parseResearchCIR } from '../../cir/parsers.js';
 import { loadStyleCIR } from '../../cir/loader.js';
 

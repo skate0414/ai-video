@@ -13,9 +13,9 @@ import { startServerRuntime } from './runtime.js';
 
 // Side-effect import: registers all provider plugins.
 import '@ai-video/pipeline-core/providerPlugins.js';
-// Side-effect import: ensures stage definitions are registered before
+// Side-effect import: registers all built-in video stage definitions before
 // external plugins try to slot in via after/before constraints.
-import '@ai-video/pipeline-core/stageDefinitions.js';
+import '@ai-video/pipeline-video/stageDefinitions.js';
 
 const STARTUP_PORT_SOURCES_DEFAULT: Record<keyof PipelineCorePorts, string> = {
   adapterHostBindingsPort: 'default',
