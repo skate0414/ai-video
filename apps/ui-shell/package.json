@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@ai-video/shared": "*",
-    "@tailwindcss/vite": "^4.2.2",
+    "@tailwindcss/vite": "^4.2.4",
     "autoprefixer": "^10.4.27",
     "clsx": "^2.1.1",
     "lucide-react": "^0.468.0",
