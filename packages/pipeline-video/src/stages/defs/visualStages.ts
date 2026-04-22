@@ -20,10 +20,10 @@ import {
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Scene } from '@ai-video/pipeline-core/pipelineTypes.js';
-import { parseStoryboardCIR } from '../../cir/parsers.js';
-import { loadFormatSignature, loadScriptCIR, loadStyleCIR, loadVideoIR, loadShotCIR } from '../../cir/loader.js';
-import type { TemporalPlanCIR, StoryboardCIR, ShotCIR } from '../../cir/types.js';
-import { CIRValidationError } from '../../cir/errors.js';
+import { parseStoryboardCIR } from '@ai-video/pipeline-core/cir/parsers.js';
+import { loadFormatSignature, loadScriptCIR, loadStyleCIR, loadVideoIR, loadShotCIR } from '@ai-video/pipeline-core/cir/loader.js';
+import type { TemporalPlanCIR, StoryboardCIR, ShotCIR } from '@ai-video/pipeline-core/cir/types.js';
+import { CIRValidationError } from '@ai-video/pipeline-core/cir/errors.js';
 import { CANDIDATE_COUNT } from '@ai-video/pipeline-core/constants.js';
 
 const DEFAULT_MIN_VIDEO_SCENES = 2;

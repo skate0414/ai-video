@@ -2,7 +2,7 @@
   "name": "@ai-video/pipeline-core",
   "version": "0.0.0",
   "private": true,
-  "description": "Generic compilation pipeline engine (stage registry, runner, retry policies). NOTE: CIR shims and render impl shims in src/cir/ and src/providers/video/ still reference @ai-video/pipeline-video — full decoupling is tracked as future work once those files migrate.",
+  "description": "Generic compilation pipeline engine (stage registry, runner, retry policies, CIR types). NOTE: render impl shims in src/providers/video/ still reference @ai-video/pipeline-video — full render decoupling is tracked as future work.",
   "dependencies": {
     "@ai-video/lib": "*",
     "@ai-video/pipeline-video": "*",

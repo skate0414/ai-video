@@ -19,9 +19,9 @@ import {
   runScriptGeneration,
   validateScript,
 } from '@ai-video/pipeline-core/stages/index.js';
-import { parseScriptCIR } from '../../cir/parsers.js';
-import { loadStyleCIR, loadScriptCIR, loadFormatSignature, loadShotCIR } from '../../cir/loader.js';
-import type { StyleAnalysisCIR, FormatSignature } from '../../cir/types.js';
+import { parseScriptCIR } from '@ai-video/pipeline-core/cir/parsers.js';
+import { loadStyleCIR, loadScriptCIR, loadFormatSignature, loadShotCIR } from '@ai-video/pipeline-core/cir/loader.js';
+import type { StyleAnalysisCIR, FormatSignature } from '@ai-video/pipeline-core/cir/types.js';
 
 /* ---- 4. NARRATIVE_MAP (includes calibration sub-step) ---- */
 

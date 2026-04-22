@@ -26,7 +26,7 @@ import {
 } from '@ai-video/pipeline-core/stages/index.js';
 import { isEdgeTTSAvailable, type TTSConfig } from '@ai-video/pipeline-core/ttsProvider.js';
 import type { Scene } from '@ai-video/pipeline-core/pipelineTypes.js';
-import { loadVideoIR } from '../../cir/loader.js';
+import { loadVideoIR } from '@ai-video/pipeline-core/cir/loader.js';
 import { CANDIDATE_COUNT } from '@ai-video/pipeline-core/constants.js';
 
 /* ---- 10. VIDEO_GEN ---- */

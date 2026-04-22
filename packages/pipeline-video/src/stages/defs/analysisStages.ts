@@ -18,8 +18,8 @@ import {
   runStyleExtraction,
 } from '@ai-video/pipeline-core/stages/index.js';
 import { validateStyleContract } from '@ai-video/pipeline-core/styleContract.js';
-import { parseStyleAnalysisCIR, parseResearchCIR } from '../../cir/parsers.js';
-import { loadStyleCIR } from '../../cir/loader.js';
+import { parseStyleAnalysisCIR, parseResearchCIR } from '@ai-video/pipeline-core/cir/parsers.js';
+import { loadStyleCIR } from '@ai-video/pipeline-core/cir/loader.js';
 
 /* ---- 1. CAPABILITY_ASSESSMENT ---- */
 
