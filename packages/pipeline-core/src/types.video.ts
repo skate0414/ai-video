@@ -153,6 +153,14 @@ export interface StyleProfile {
     subtitle_font_category?: string;
     transition_dominant_style?: string;
     transition_estimated_duration_sec?: number;
+    has_intro_card?: boolean;
+    intro_card_duration_sec?: number;
+    has_fade_in?: boolean;
+    fade_in_duration_sec?: number;
+    has_outro_card?: boolean;
+    outro_card_duration_sec?: number;
+    has_fade_out?: boolean;
+    fade_out_duration_sec?: number;
   };
   suspiciousNumericClaims?: Array<{
     claim: string;

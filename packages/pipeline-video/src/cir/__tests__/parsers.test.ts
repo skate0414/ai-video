@@ -293,7 +293,7 @@ describe('parseStyleAnalysisCIR', () => {
         has_fade_out: true,
         fade_out_duration_sec: 1.2,
       },
-    } as any);
+    });
     const cir = parseStyleAnalysisCIR(profile, 80);
     expect(cir.packagingTrack.subtitlePosition).toBe('top');
     expect(cir.packagingTrack.subtitleHasShadow).toBe(false);
@@ -341,7 +341,7 @@ describe('parseStyleAnalysisCIR', () => {
         subtitle_primary_color: 'red',     // invalid hex → '#FFFFFF'
         transition_estimated_duration_sec: 99, // clamped to 5
       },
-    } as any);
+    });
     const cir = parseStyleAnalysisCIR(profile, 80);
     expect(cir.packagingTrack.subtitlePosition).toBe('bottom');
     expect(cir.packagingTrack.subtitleFontSize).toBe('medium');
@@ -349,6 +349,27 @@ describe('parseStyleAnalysisCIR', () => {
     expect(cir.packagingTrack.transitionDominantStyle).toBe('cut');
     expect(cir.packagingTrack.subtitlePrimaryColor).toBe('#FFFFFF');
     expect(cir.packagingTrack.transitionEstimatedDurationSec).toBe(5);
+  });
+
+  it('handles subtitle_font_size as a number (normalised to closest label)', () => {
+    const profile = makeStyleProfile({
+      track_d_packaging: {
+        subtitle_font_size: 18,   // number → String('18') → normalise → 'medium' fallback
+      },
+    });
+    const cir = parseStyleAnalysisCIR(profile, 80);
+    // A numeric value that doesn't match 'small'|'medium'|'large' normalises to 'medium'
+    expect(cir.packagingTrack.subtitleFontSize).toBe('medium');
+  });
+
+  it('handles subtitle_font_size as a recognised string number alias ("large")', () => {
+    const profile = makeStyleProfile({
+      track_d_packaging: {
+        subtitle_font_size: 'large',
+      },
+    });
+    const cir = parseStyleAnalysisCIR(profile, 80);
+    expect(cir.packagingTrack.subtitleFontSize).toBe('large');
   });
 });
 

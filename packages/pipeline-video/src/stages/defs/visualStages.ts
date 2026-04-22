@@ -133,7 +133,7 @@ registerStage({
     project.videoIR = videoIR;
     ctx.saveArtifact(ARTIFACT.VIDEO_IR_CIR, videoIR);
 
-    const videoSceneCount = videoIR.scenes.filter((scene: Scene) => scene.assetType === 'video').length;
+    const videoSceneCount = videoIR.scenes.filter((scene) => scene.assetType === 'video').length;
     addLog({
       id: `log_${Date.now()}`,
       timestamp: new Date().toISOString(),
