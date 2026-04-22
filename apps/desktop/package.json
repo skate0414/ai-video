@@ -16,7 +16,7 @@
     "@ai-video/shared": "*"
   },
   "devDependencies": {
-    "@types/node": "^22.15.21",
+    "@types/node": "^25.6.0",
     "electron": "41.2.2",
     "electron-builder": "^26.0.0",
     "typescript": "~5.9.3"
