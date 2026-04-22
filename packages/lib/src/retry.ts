@@ -102,11 +102,11 @@ export function isTransient(err: unknown): boolean {
     return true;
   }
   const msg = typeof e.message === 'string' ? e.message : '';
-  if (/\b(429|500|502|503|504)\b|rate limit|ETIMEDOUT|ECONNRESET|ECONNREFUSED/.test(msg)) {
+  if (/\b(429|500|502|503|504)\b|rate limit|ETIMEDOUT|ECONNRESET|ECONNREFUSED|ENOTFOUND/.test(msg)) {
     return true;
   }
   const code = e.code;
-  if (typeof code === 'string' && ['ETIMEDOUT', 'ECONNRESET', 'ECONNREFUSED', 'EAI_AGAIN'].includes(code)) {
+  if (typeof code === 'string' && ['ETIMEDOUT', 'ECONNRESET', 'ECONNREFUSED', 'EAI_AGAIN', 'ENOTFOUND'].includes(code)) {
     return true;
   }
   return false;

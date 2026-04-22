@@ -388,5 +388,20 @@ describe('GeminiAdapter', () => {
         adapter.uploadFile({ name: 'bad.xyz', path: '/dev/null', mimeType: 'video/mp4' }),
       ).rejects.toThrow('File processing failed');
     });
+
+    it('propagates errors thrown during polling', async () => {
+      filesUploadMock.mockResolvedValueOnce({
+        name: 'files/abc',
+        state: 'PROCESSING',
+        uri: 'gs://bucket/file',
+        mimeType: 'video/mp4',
+      });
+      // Simulate a network error on the first status poll
+      filesGetMock.mockRejectedValueOnce(new Error('network error during poll'));
+
+      await expect(
+        adapter.uploadFile({ name: 'test.mp4', path: '/dev/null', mimeType: 'video/mp4' }),
+      ).rejects.toThrow('network error during poll');
+    });
   });
 });

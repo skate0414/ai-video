@@ -39,7 +39,7 @@ coverage/
 scripts/
 
 # Documentation
-docs/
+# docs/   ← removed: project docs now tracked in git
 
 # Runtime data
 data/uploads/

@@ -14,6 +14,7 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       matrix:
         node-version: [20, 22]
@@ -66,11 +67,24 @@ jobs:
       - name: Typecheck desktop shell
         run: npm run typecheck --workspace @ai-video/app-desktop
 
-      - name: Test (Vitest — backend scripts + packages + apps)
-        run: npm test
+      # Run tests AND enforce per-directory coverage thresholds defined in vitest.config.ts.
+      # Coverage is only uploaded from the Node 22 matrix leg to avoid duplicate uploads.
+      - name: Test + coverage (Vitest — backend scripts + packages + apps)
+        run: npx vitest run --coverage
+        env:
+          CI: true
+
+      - name: Upload coverage report
+        if: matrix.node-version == 22
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
 
   docker-smoke:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: check
     steps:
       - uses: actions/checkout@v4
@@ -83,14 +97,30 @@ jobs:
           docker run -d --rm --name ai-video-ci \
             -e DATA_DIR=/tmp/ai-video-data \
             -p 3220:3220 ai-video:ci
-          # Wait up to 60s for /health to respond
+
+      - name: Wait for /health
+        # Retry every 2 s for up to 60 s; exit non-zero if never healthy.
+        run: |
+          echo "Waiting for container to become healthy…"
+          healthy=false
           for i in $(seq 1 30); do
-            if curl -fsS http://localhost:3220/health >/dev/null; then
-              echo "healthy after ${i}s"; break
+            if curl -fsS http://localhost:3220/health >/dev/null 2>&1; then
+              echo "Container healthy after $((i * 2))s"
+              healthy=true
+              break
+            fi
+            # Exit early if the container has already died.
+            if ! docker ps -q --filter name=ai-video-ci | grep -q .; then
+              echo "::error::Container exited unexpectedly before becoming healthy"
+              break
             fi
             sleep 2
           done
-          curl -fsS http://localhost:3220/health
+          if [ "$healthy" = false ]; then
+            echo "::error::Container did not become healthy within 60s"
+            exit 1
+          fi
+          curl -fsS http://localhost:3220/health | python3 -m json.tool
 
       - name: Show container logs
         if: always()

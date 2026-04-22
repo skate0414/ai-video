@@ -5,7 +5,49 @@
 import { existsSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Page } from 'playwright';
+import { createLogger } from '@ai-video/lib/logger.js';
 import type { ApiLog, VideoGenResult, VideoGenerationRuntime, WriteFailure } from './types.js';
+
+const log = createLogger('VideoProviderDownload');
+
+/** Minimum byte threshold for a valid video file (10 KB). */
+const MIN_VIDEO_BYTES = 10_000;
+
+/** Timeout in milliseconds for node:https CDN downloads. */
+const CDN_DOWNLOAD_TIMEOUT_MS = 60_000;
+
+/**
+ * Download a video from a CDN URL using node:https.
+ * Returns the downloaded Buffer, or null on failure or if the data is too small.
+ * Enforces a timeout to prevent indefinite hangs on slow/unresponsive servers.
+ *
+ * @internal Exported for unit testing only.
+ */
+export async function downloadFromHttpUrl(cdnUrl: string): Promise<Buffer | null> {
+  try {
+    const { default: https } = await import('node:https');
+    const data = await new Promise<Buffer>((resolve, reject) => {
+      const req = https.get(cdnUrl, (res) => {
+        const chunks: Buffer[] = [];
+        res.on('data', (c: Buffer) => chunks.push(c));
+        res.on('end', () => resolve(Buffer.concat(chunks)));
+        res.on('error', reject);
+      });
+      req.on('error', reject);
+      req.setTimeout(CDN_DOWNLOAD_TIMEOUT_MS, () => {
+        req.destroy(new Error(`CDN download timed out after ${CDN_DOWNLOAD_TIMEOUT_MS / 1000}s`));
+      });
+    });
+    if (data.length < MIN_VIDEO_BYTES) {
+      log.warn('cdn_download_too_small', { url: cdnUrl.slice(0, 120), bytes: data.length });
+      return null;
+    }
+    return data;
+  } catch (e) {
+    log.warn('cdn_download_failed', { url: cdnUrl.slice(0, 120), error: e instanceof Error ? e.message : String(e) });
+    return null;
+  }
+}
 
 export async function downloadGeneratedVideo(
   page: Page,
@@ -16,53 +58,29 @@ export async function downloadGeneratedVideo(
   const outputPath = join(runtime.outputDir, runtime.filename);
 
   if (runtime.strategy.extractVideoUrlFromApi && !existsSync(outputPath)) {
-    for (const log of [...apiLogs].reverse()) {
-      if (!log.body) continue;
-      const cdnMatch = log.body.match(/"resource"\s*:\s*"(https?:\/\/[^"]+(?:\.mp4|\/video\/[^"]+)[^"]*)"/);
+    for (const apiLog of [...apiLogs].reverse()) {
+      if (!apiLog.body) continue;
+      const cdnMatch = apiLog.body.match(/"resource"\s*:\s*"(https?:\/\/[^"]+(?:\.mp4|\/video\/[^"]+)[^"]*)"/);
       if (!cdnMatch) {
-        const videoUrlMatch = log.body.match(/"(https?:\/\/[^"]*(?:kcdn|ksyun|kwai|cos)[^"]*(?:\.mp4|video)[^"]*)"/);
+        const videoUrlMatch = apiLog.body.match(/"(https?:\/\/[^"]*(?:kcdn|ksyun|kwai|cos)[^"]*(?:\.mp4|video)[^"]*)"/);
         if (!videoUrlMatch) continue;
         const cdnUrl = videoUrlMatch[1]!;
-        console.log(`[videoProvider] Found Kling video URL in API response: ${cdnUrl.slice(0, 120)}...`);
-        try {
-          const { default: http } = await import('node:https');
-          const data = await new Promise<Buffer>((resolve, reject) => {
-            http.get(cdnUrl, (res) => {
-              const chunks: Buffer[] = [];
-              res.on('data', (c: Buffer) => chunks.push(c));
-              res.on('end', () => resolve(Buffer.concat(chunks)));
-              res.on('error', reject);
-            }).on('error', reject);
-          });
-          if (data.length > 10_000) {
-            writeFileSync(outputPath, data);
-            console.log(`[videoProvider] Video saved from Kling CDN (node https): ${outputPath} (${(data.length / 1024 / 1024).toFixed(1)}MB)`);
-          }
-        } catch (e) {
-          console.warn(`[videoProvider] Kling CDN download failed: ${e instanceof Error ? e.message : e}`);
+        log.info('api_video_url_found', { url: cdnUrl.slice(0, 120) });
+        const data = await downloadFromHttpUrl(cdnUrl);
+        if (data) {
+          writeFileSync(outputPath, data);
+          log.info('video_saved_cdn', { path: outputPath, sizeMB: (data.length / 1024 / 1024).toFixed(1) });
         }
         if (existsSync(outputPath)) break;
         continue;
       }
 
       const cdnUrl = cdnMatch[1]!;
-      console.log(`[videoProvider] Found Kling CDN URL in API response: ${cdnUrl.slice(0, 120)}...`);
-      try {
-        const { default: http } = await import('node:https');
-        const data = await new Promise<Buffer>((resolve, reject) => {
-          http.get(cdnUrl, (res) => {
-            const chunks: Buffer[] = [];
-            res.on('data', (c: Buffer) => chunks.push(c));
-            res.on('end', () => resolve(Buffer.concat(chunks)));
-            res.on('error', reject);
-          }).on('error', reject);
-        });
-        if (data.length > 10_000) {
-          writeFileSync(outputPath, data);
-          console.log(`[videoProvider] Video saved from Kling CDN (node https): ${outputPath} (${(data.length / 1024 / 1024).toFixed(1)}MB)`);
-        }
-      } catch (e) {
-        console.warn(`[videoProvider] Kling CDN download failed: ${e instanceof Error ? e.message : e}`);
+      log.info('api_cdn_url_found', { url: cdnUrl.slice(0, 120) });
+      const data = await downloadFromHttpUrl(cdnUrl);
+      if (data) {
+        writeFileSync(outputPath, data);
+        log.info('video_saved_cdn', { path: outputPath, sizeMB: (data.length / 1024 / 1024).toFixed(1) });
       }
       if (existsSync(outputPath)) break;
     }
@@ -77,9 +95,9 @@ export async function downloadGeneratedVideo(
           dlBtn.click(),
         ]);
         await download.saveAs(outputPath);
-        console.log(`[videoProvider] Video downloaded via button to: ${outputPath}`);
+        log.info('video_saved_button', { path: outputPath });
       } catch (e) {
-        console.warn(`[videoProvider] Download button failed: ${e instanceof Error ? e.message : e}`);
+        log.warn('download_button_failed', { error: e instanceof Error ? e.message : String(e) });
       }
     }
   }
@@ -104,7 +122,7 @@ export async function downloadGeneratedVideo(
     )()`).catch(() => null) as string | null;
 
     if (videoUrl) {
-      console.log(`[videoProvider] Extracting video from URL: ${videoUrl.slice(0, 100)}...`);
+      log.info('video_url_extracting', { url: videoUrl.slice(0, 100) });
       try {
         if (videoUrl.startsWith('blob:')) {
           const base64 = await page.evaluate(`(async () => {
@@ -127,7 +145,7 @@ export async function downloadGeneratedVideo(
           })()`) as string;
           if (base64) {
             writeFileSync(outputPath, Buffer.from(base64, 'base64'));
-            console.log(`[videoProvider] Video saved from blob: ${outputPath}`);
+            log.info('video_saved_blob', { path: outputPath });
           }
         } else {
           const resp = await page.evaluate(`(async () => {
@@ -146,10 +164,10 @@ export async function downloadGeneratedVideo(
             });
           })()`) as number[];
           writeFileSync(outputPath, Buffer.from(resp));
-          console.log(`[videoProvider] Video saved from URL: ${outputPath}`);
+          log.info('video_saved_url', { path: outputPath });
         }
       } catch (e) {
-        console.warn(`[videoProvider] Video extraction failed: ${e instanceof Error ? e.message : e}`);
+        log.warn('video_extraction_failed', { error: e instanceof Error ? e.message : String(e) });
       }
     }
   }
@@ -158,7 +176,7 @@ export async function downloadGeneratedVideo(
     return { localPath: outputPath };
   }
 
-  console.warn('[videoProvider] No video file produced');
+  log.warn('no_video_file_produced', { outputPath });
   writeFailure('NO_VIDEO_FILE: All download strategies failed', { outputPath });
   return null;
 }

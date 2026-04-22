@@ -7,7 +7,30 @@ on:
   workflow_dispatch:
 
 jobs:
+  # Gate: run the full test suite before spending CI minutes on multi-platform builds.
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck (all workspaces)
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
   build-electron:
+    needs: test
     strategy:
       fail-fast: false
       matrix:
@@ -20,6 +43,7 @@ jobs:
             os: win
 
     runs-on: ${{ matrix.platform }}
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@v4

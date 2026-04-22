@@ -1,0 +1,97 @@
+name: Bug Report
+description: Report a reproducible bug or unexpected behaviour
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report. Please fill in as much detail as possible.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear, concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: |
+        Describe the exact steps to reproduce the problem.
+      placeholder: |
+        1. Start the server with `npm run dev`
+        2. Create a project with topic "…"
+        3. Start the pipeline
+        4. Observe error at stage VIDEO_GEN
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behaviour
+      description: What actually happens? Include any error messages or stack traces.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: "`git rev-parse --short HEAD` or the release tag (e.g. v0.1.0)"
+      placeholder: abc1234
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: Deployment Mode
+      options:
+        - Local (npm run dev)
+        - Docker
+        - Desktop (Electron)
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Node.js version, OS, relevant env vars (omit secrets).
+      placeholder: |
+        Node: v22.x
+        OS: Ubuntu 24.04 / macOS 15 / Windows 11
+        GEMINI_API_KEY: set
+        AIVIDEOMAKER_API_KEY: not set
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: Server logs, browser console errors, Docker logs, etc.
+      render: text
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before submitting
+      options:
+        - label: I have searched existing issues and this is not a duplicate.
+          required: true
+        - label: I have read the [Troubleshooting section of the deployment guide](../../docs/deployment.md#troubleshooting).
+          required: false

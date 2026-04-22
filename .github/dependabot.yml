@@ -1,0 +1,89 @@
+version: 2
+
+updates:
+  # ── npm / Node.js workspaces ────────────────────────────────────────────────
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "04:00"
+      timezone: Asia/Shanghai
+    open-pull-requests-limit: 10
+    # Group all non-major bumps so the PR noise stays manageable.
+    groups:
+      typescript-ecosystem:
+        patterns:
+          - "typescript"
+          - "tsx"
+          - "vitest"
+          - "@vitest/*"
+          - "@types/*"
+      testing-tools:
+        patterns:
+          - "@testing-library/*"
+          - "jsdom"
+      playwright:
+        patterns:
+          - "playwright"
+          - "@playwright/*"
+    ignore:
+      # Major version bumps for these packages require a deliberate decision.
+      - dependency-name: "electron"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps(dev)"
+      include: scope
+
+  # ── apps/ui-shell (Vite / React workspace) ──────────────────────────────────
+  - package-ecosystem: npm
+    directory: "/apps/ui-shell"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "04:30"
+      timezone: Asia/Shanghai
+    open-pull-requests-limit: 5
+    groups:
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      vite:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+    commit-message:
+      prefix: "deps(ui-shell)"
+
+  # ── apps/desktop (Electron workspace) ───────────────────────────────────────
+  - package-ecosystem: npm
+    directory: "/apps/desktop"
+    schedule:
+      interval: weekly
+      day: tuesday
+      time: "04:00"
+      timezone: Asia/Shanghai
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "electron"
+        update-types: ["version-update:semver-major"]
+    commit-message:
+      prefix: "deps(desktop)"
+
+  # ── GitHub Actions ───────────────────────────────────────────────────────────
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Asia/Shanghai
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci(deps)"

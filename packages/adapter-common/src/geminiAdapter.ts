@@ -251,7 +251,10 @@ export class GeminiAdapter implements AIAdapter {
 
   /* ---- uploadFile ---- */
 
-  async uploadFile(file: { name: string; path: string; mimeType: string }): Promise<{ uri: string; mimeType: string }> {
+  async uploadFile(
+    file: { name: string; path: string; mimeType: string },
+    options?: AIRequestOptions,
+  ): Promise<{ uri: string; mimeType: string }> {
     return withRetry(async () => {
       const { readFileSync } = await import('node:fs');
       const buffer = readFileSync(file.path);
@@ -267,10 +270,11 @@ export class GeminiAdapter implements AIAdapter {
       const pollStart = Date.now();
       const maxPollMs = 5 * 60_000; // 5 minutes max
       while (fileInfo.state === 'PROCESSING') {
+        throwIfAborted(options?.signal, `Gemini uploadFile(${file.name})`);
         if (Date.now() - pollStart > maxPollMs) {
           throw new Error(`File processing timed out after ${Math.round(maxPollMs / 1000)}s (file: ${file.name})`);
         }
-        await new Promise(r => setTimeout(r, 2000));
+        await waitWithAbort(2000, options?.signal, `Gemini uploadFile(${file.name}) poll wait`);
         const status = await this.client.files.get({ name: fileInfo.name });
         if (status) fileInfo = status;
       }
@@ -280,7 +284,7 @@ export class GeminiAdapter implements AIAdapter {
       }
 
       return { uri: fileInfo.uri, mimeType: fileInfo.mimeType };
-    });
+    }, options);
   }
 
   /* ---- generateSpeech (TTS) ---- */

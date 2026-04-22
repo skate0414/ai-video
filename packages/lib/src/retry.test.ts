@@ -35,7 +35,12 @@ describe('isTransient', () => {
 
   it('matches node error codes', () => {
     expect(isTransient({ code: 'ECONNRESET' })).toBe(true);
+    expect(isTransient({ code: 'ENOTFOUND' })).toBe(true);
     expect(isTransient({ code: 'ENOENT' })).toBe(false);
+  });
+
+  it('matches ENOTFOUND in message string', () => {
+    expect(isTransient(new Error('getaddrinfo ENOTFOUND api.example.com'))).toBe(true);
   });
 });
 
