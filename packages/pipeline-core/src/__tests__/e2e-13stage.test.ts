@@ -9,6 +9,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mkdtempSync, rmSync, existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+// Side-effect: registers all 15 video stage definitions before the E2E run.
+import '@ai-video/pipeline-video/stageDefinitions.js';
 import { ARTIFACT } from '../constants.js';
 import { SSE_EVENT } from '../pipelineTypes.js';
 

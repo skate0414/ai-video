@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+// Side-effect: registers video stage definitions before orchestrator preflight runs.
+import '@ai-video/pipeline-video/stageDefinitions.js';
 import { PipelineOrchestrator } from '../orchestrator.js';
 import type { AIAdapter } from '../pipelineTypes.js';
 

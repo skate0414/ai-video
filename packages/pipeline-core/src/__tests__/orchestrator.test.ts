@@ -3,6 +3,8 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+// Side-effect: registers video stage definitions so project status maps are initialised correctly.
+import '@ai-video/pipeline-video/stageDefinitions.js';
 import { PipelineOrchestrator } from '../orchestrator.js';
 import type { AIAdapter, PipelineEvent, Scene } from '../pipelineTypes.js';
 import { ARTIFACT } from '../constants.js';

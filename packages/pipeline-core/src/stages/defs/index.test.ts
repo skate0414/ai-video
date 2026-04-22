@@ -1,24 +1,16 @@
-import { describe, it, expect } from 'vitest';
-import './index.js';
-import { getStageOrder } from '../../stageRegistry.js';
+/**
+ * Stage defs registration test — moved to @ai-video/pipeline-video.
+ *
+ * The stage registration tests now live in:
+ *   packages/pipeline-video/src/stages/defs/index.test.ts
+ *
+ * This stub exists to avoid breaking vitest discovery.
+ */
 
-describe('stage defs index side-effect registration', () => {
-  it('registers all expected stages in execution order', () => {
-    const order = getStageOrder();
-    expect(order).toContain('CAPABILITY_ASSESSMENT');
-    expect(order).toContain('STYLE_EXTRACTION');
-    expect(order).toContain('RESEARCH');
-    expect(order).toContain('NARRATIVE_MAP');
-    expect(order).toContain('SCRIPT_GENERATION');
-    expect(order).toContain('QA_REVIEW');
-    expect(order).toContain('TEMPORAL_PLANNING');
-    expect(order).toContain('STORYBOARD');
-    expect(order).toContain('VIDEO_IR_COMPILE');
-    expect(order).toContain('REFERENCE_IMAGE');
-    expect(order).toContain('KEYFRAME_GEN');
-    expect(order).toContain('VIDEO_GEN');
-    expect(order).toContain('TTS');
-    expect(order).toContain('ASSEMBLY');
-    expect(order).toContain('REFINEMENT');
+import { describe, it } from 'vitest';
+
+describe('stage defs (stub — see pipeline-video)', () => {
+  it('is a no-op placeholder; real test is in pipeline-video', () => {
+    // Intentionally empty — see packages/pipeline-video/src/stages/defs/index.test.ts
   });
 });

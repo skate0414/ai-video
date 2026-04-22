@@ -43,6 +43,7 @@ export interface ProjectMeta {
   pauseAfterStages?: PipelineStage[];
   isPaused?: boolean;
   pausedAtStage?: PipelineStage;
+  resumedAt?: string;
   modelOverrides?: ModelOverrides;
   stageProviderOverrides?: StageProviderOverrides;
   promptOverrides?: Record<string, string>;

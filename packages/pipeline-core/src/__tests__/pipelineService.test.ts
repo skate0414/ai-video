@@ -3,6 +3,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+// Side-effect: registers video stage definitions so PipelineService route table is populated.
+import '@ai-video/pipeline-video/stageDefinitions.js';
 import { PipelineService } from '../pipelineService.js';
 import { ConfigStore } from '../configStore.js';
 import { SSE_EVENT } from '../pipelineTypes.js';

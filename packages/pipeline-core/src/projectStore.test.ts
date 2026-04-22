@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+// Side-effect: registers video stage definitions so ProjectStore initialises stage status maps correctly.
+import '@ai-video/pipeline-video/stageDefinitions.js';
 import { ProjectStore } from './projectStore.js';
 import { ARTIFACT } from './constants.js';
 

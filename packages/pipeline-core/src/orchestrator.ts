@@ -196,7 +196,7 @@ export class PipelineOrchestrator {
               timestamp: new Date().toISOString(),
               message: msg,
               type: event.type === 'provider_down' ? 'error' : 'warning',
-              stage: 'VIDEO_GEN' as any,
+              stage: 'VIDEO_GEN',
             },
           },
         });
@@ -305,7 +305,7 @@ export class PipelineOrchestrator {
     const targets = artifacts ? new Set(artifacts) : undefined;
     for (const [artifact, fieldName] of ARTIFACT_CACHE_FIELDS) {
       if (!targets || targets.has(artifact)) {
-        (project as any)[fieldName] = undefined;
+        (project as Record<string, unknown>)[fieldName] = undefined;
       }
     }
     this.saveProject(project);
@@ -362,9 +362,9 @@ export class PipelineOrchestrator {
 
     // Track resume timestamp if project was previously paused
     if (project.isPaused) {
-      (project as any).resumedAt = new Date().toISOString();
+      project.resumedAt = new Date().toISOString();
       project.isPaused = false;
-      log.info('pipeline_resumed', { projectId, pausedAtStage: project.pausedAtStage, resumedAt: (project as any).resumedAt });
+      log.info('pipeline_resumed', { projectId, pausedAtStage: project.pausedAtStage, resumedAt: project.resumedAt });
     }
 
     // Restore persisted session state for this project

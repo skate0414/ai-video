@@ -143,6 +143,17 @@ export interface StyleProfile {
     voice_style?: string;
     audio_visual_sync_points?: string[];
   };
+  track_d_packaging?: {
+    subtitle_position?: string;
+    subtitle_has_shadow?: boolean;
+    subtitle_has_backdrop?: boolean;
+    subtitle_font_size?: string | number;
+    subtitle_primary_color?: string;
+    subtitle_outline_color?: string;
+    subtitle_font_category?: string;
+    transition_dominant_style?: string;
+    transition_estimated_duration_sec?: number;
+  };
   suspiciousNumericClaims?: Array<{
     claim: string;
     value: string;
