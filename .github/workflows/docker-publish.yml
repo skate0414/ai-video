@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Log in to the GitHub Container Registry so we can push the image.
       - name: Log in to GHCR
